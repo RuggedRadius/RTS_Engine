@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ public class CameraMovement : MonoBehaviour
     public float camHeightMin;
     [SerializeField]
     public float camHeightMax;
+    [SerializeField]
+    public float curTerrainHeight;
 
 
     [SerializeField]
@@ -43,40 +46,50 @@ public class CameraMovement : MonoBehaviour
     private float camRotationSpeed;
 
     [SerializeField]
-    private float camZoomSpeed;
+    private LayerMask heightGatherLayerMask;
 
-    float camX;
-    float camY;
-    float camZ;
+    //[SerializeField]
+    //private float camZoomSpeed;
 
-    void Start()
+    float focalX;
+    float focalY;
+    float focalZ;
+
+    private void Start()
     {
-        positionCamera();
+        camHeightCur = camHeightMax;
     }
 
     void Update()
     {
-        getKeyboardInputs();
-        getMouseScroll();
-
-
-
-        scrollSpeedCur = Mathf.Lerp(scrollSpeedMin, scrollSpeedMax, camHeightCur/camHeightMax);
+        // Adjust scroll/zoom speeds
+        scrollSpeedCur = Mathf.Lerp(scrollSpeedMin, scrollSpeedMax, camHeightCur / camHeightMax);
         keyboardMovementSpeed = scrollSpeedCur;
 
+        // Get inputs
+        getMouseZoom();
+        getKeyboardInputs();
 
-        confineCameraPosition();
+        // Confine and position camera
+        confineFocalPointToTerrainBounds();
         positionCamera();
+
+        // Look at focal point
         cam.transform.LookAt(focalPoint.transform);
     }
 
-    private void getMouseScroll()
+    private void getMouseZoom()
     {
         if (Input.mouseScrollDelta.y != 0)
         {
-            camHeightCur -= Input.mouseScrollDelta.y * camZoomSpeed;
+            camHeightCur -= Input.mouseScrollDelta.y * calcZoomSpeed();
             positionCamera();
         }
+    }
+
+    private float calcZoomSpeed()
+    {
+        return Mathf.Lerp(50f, 250f, camHeightCur / camHeightMax);
     }
 
     private void getKeyboardInputs()
@@ -106,69 +119,88 @@ public class CameraMovement : MonoBehaviour
             focalPoint.transform.eulerAngles += Vector3.down * camRotationSpeed;
         }
     }
-
-    private void positionCamera()
+    private float getHeightFromPosition(Vector3 position)
     {
-        // Determine camera position based on rotation
-        //Vector3 camPosition = focalPoint.transform.position + (transform.forward * camDistance) + (transform.up * camHeight);
-        Vector3 camPosition = (Vector3.forward * camDistance) + (Vector3.up * (camHeightCur));
+        Vector3 modifiedPosition = new Vector3(position.x, terrain.terrainData.size.y, position.z);
+        Ray ray = new Ray(modifiedPosition, -transform.up);
+        Debug.DrawRay(ray.origin, ray.direction, Color.red, 3f);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            //Debug.Log("Hit " + hit.collider.gameObject.name + " at " + hit.point);
 
-        // Set camera position
-        cam.transform.localPosition = camPosition;
+            // Hit terrain
+            return hit.point.y;
+        }
+        else
+        {
+            Debug.LogError("No terrain below!");
+            return -100f;
+        }
+               
     }
-
-    private void confineCameraPosition()
+    private void confineFocalPointToTerrainBounds()
     {
-        camX = focalPoint.transform.position.x;
-        camZ = focalPoint.transform.position.z;
+        focalX = focalPoint.transform.position.x;
+        focalZ = focalPoint.transform.position.z;
 
-        // Y-Axis
-        camHeightCur = Mathf.Clamp(camHeightCur, camHeightMin, camHeightMax);
-
-        // X-Axis
+        // Limit X-Axis
         if (focalPoint.transform.position.x < terrain.transform.position.x)
         {
             Debug.Log("Below X Min");
-            camX = terrain.transform.position.x;
-            camZ = focalPoint.transform.position.z;
+            focalX = terrain.transform.position.x; // X value up
+            focalZ = focalPoint.transform.position.z;
         }
         if (focalPoint.transform.position.x > terrain.transform.position.x + terrain.terrainData.size.x)
         {
             Debug.Log("Above X Max");
-            camX = terrain.transform.position.x + terrain.terrainData.size.x;
-            camZ = focalPoint.transform.position.z;
+            focalX = terrain.transform.position.x + terrain.terrainData.size.x; // X value down
+            focalZ = focalPoint.transform.position.z;
         }
 
-        // Z-Axis
+        // Limit Z-Axis
         if (focalPoint.transform.position.z < terrain.transform.position.z)
         {
             Debug.Log("Below Z Min");
-            camX = focalPoint.transform.position.x;
-            camZ = terrain.transform.position.z;
+            focalX = focalPoint.transform.position.x;
+            focalZ = terrain.transform.position.z; // Z Axis up
         }
         if (focalPoint.transform.position.z > terrain.transform.position.z + terrain.terrainData.size.z)
         {
             Debug.Log("Above Z Max");
-            camX = focalPoint.transform.position.x;
-            camZ = terrain.transform.position.z + terrain.terrainData.size.z;
+            focalX = focalPoint.transform.position.x;
+            focalZ = terrain.transform.position.z + terrain.terrainData.size.z; // Z Axis Down
         }
 
-        // Get terrain data
-        //camY = getTerrainHeight(camX, camZ);
-        camY = camHeightCur;
+        // Y-Axis
+        focalY = getHeightFromPosition(focalPoint.transform.position);
+        //focalY += 0.5f;
 
-        // Set camera position
-        focalPoint.transform.position = new Vector3(camX, camY, camZ);
+        // Set focal point position
+        focalPoint.transform.position = new Vector3(focalX, focalY, focalZ);
     }
-
-    private float getTerrainHeight(float _x, float _y)
+    private void positionCamera()
     {
-        return terrain.terrainData.GetHeight((int)_x, (int)_y);
-    }
+        // Clamp cam height
+        camHeightCur = Mathf.Clamp(camHeightCur, camHeightMin, camHeightMax);
 
-    private float getTerrainHeightAtCamera()
-    {
-        return terrain.terrainData.GetHeight((int)cam.transform.position.x, (int)cam.transform.position.z);
+        // Determine camera position based on rotation, Set camera position
+        Vector3 targetPosition = (Vector3.forward * camDistance) + (Vector3.up * (camHeightCur));
+
+        //// Get height at proposed position and make sure it is above terrain height
+        //float curTerrainHeight = getHeightFromPosition(cam.transform.position + targetPosition);
+        //float offset = 100;
+        //if (targetPosition.y <= curTerrainHeight)
+        //{
+        //    targetPosition = new Vector3(
+        //        targetPosition.x,
+        //        curTerrainHeight - offset,
+        //        targetPosition.z
+        //        );
+        //}
+
+        // Smoothly apply new position
+        Vector3 velocity = Vector3.zero;
+        cam.transform.localPosition = Vector3.SmoothDamp(cam.transform.localPosition, targetPosition, ref velocity, 0.05f);
     }
 
 }
