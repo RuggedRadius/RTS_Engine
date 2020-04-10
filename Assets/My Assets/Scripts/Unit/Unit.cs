@@ -12,6 +12,7 @@ public class Unit : MonoBehaviour, IMovable
     [Header("Unit Information")]
     [SerializeField]
     public string unitName;
+
     [Header("Stats")]
     [SerializeField]
     [Range(5f, 20f)]
@@ -20,14 +21,30 @@ public class Unit : MonoBehaviour, IMovable
     public float unitDamageBase;
     [SerializeField]
     public float unitBuildTime;
+
+    [Serializable]
+    public class ResourceCost
+    {
+        [SerializeField]
+        public ResourceType type;
+        [SerializeField]
+        public int cost;
+    }
+
+    [SerializeField]
+    public List<ResourceCost> resourceCosts;
+
     [Header("Prefab")]
     [SerializeField]
     public GameObject prefab;
+
     [Header("State")]
     public bool moving;
+
     [Header("References")]
     [SerializeField]
     private Animator anim;
+
     [Header("Settings")]
     [SerializeField]
     private float destinationTolerance;

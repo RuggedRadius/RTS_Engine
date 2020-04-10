@@ -5,10 +5,14 @@ using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
 using static Interfaces;
+using static Unit;
 
 [Serializable]
 public class Structure : MonoBehaviour, IUnitProducing
 {
+    [SerializeField]
+    private ResourcesManager resourcesManager;
+
     [SerializeField]
     public string structureName;
 
@@ -23,11 +27,43 @@ public class Structure : MonoBehaviour, IUnitProducing
     [SerializeField]
     Terrain terrain;
 
+    private void Awake()
+    {
+        // Initialise script references
+        resourcesManager = GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourcesManager>();
+    }
 
     public void createUnit(Unit unit)
     {
-        if (!creatingUnit)
+        foreach (ResourceCost rc in unit.resourceCosts)
         {
+            // Determine amounts
+            int requiredAmount = rc.cost;
+            int currentAmount = resourcesManager.getResource(rc.type).currentAmount;
+
+            // Determine is current amount is enough
+            if ((currentAmount - requiredAmount) < 0)
+            {
+                // Not enough resources
+                Debug.Log("Not enough " + rc.type + " to create " + unit.unitName);
+                return;
+            }
+            else
+            {
+                // Reduce resource by cost amounts
+                resourcesManager.DecreaseResource(rc.type, rc.cost);
+            }
+        }
+
+        // If not returned by now, resources are available
+        if (creatingUnit)
+        {
+            // Add new unit to que
+            //..
+        }
+        else
+        {
+            // Train unit
             StartCoroutine(unitCreation(unit));
         }
     }

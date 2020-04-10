@@ -51,6 +51,13 @@ MonoBehaviour:
   unitSpeed: 5
   unitDamageBase: 3
   unitBuildTime: 1
+  resourceCosts:
+  - type: 2
+    cost: 50
+  - type: 0
+    cost: 20
+  - type: 1
+    cost: 10
   prefab: {fileID: 3489631472464017579}
   moving: 0
   anim: {fileID: 2013614538452846075}

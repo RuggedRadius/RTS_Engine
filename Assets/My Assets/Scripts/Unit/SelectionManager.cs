@@ -49,6 +49,8 @@ public class SelectionManager : MonoBehaviour
     [Header("Scripts")]
     [SerializeField]
     private uiSelection UISelectionScript;
+    [SerializeField]
+    private uiDisplaySingleUnit uiSingleUnitDisplay;
 
     private void createTargetMarker(Vector3 position)
     {
@@ -92,6 +94,7 @@ public class SelectionManager : MonoBehaviour
             Camera camera = Camera.main;
             selectedUnits.Clear();
             selectedStructures.Clear();
+            //uiSingleUnitDisplay.clearActionsGrid();
 
             for (int i = 0; i < selectables.Count; i++)
             {

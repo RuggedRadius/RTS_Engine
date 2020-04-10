@@ -9,85 +9,182 @@ public class PlaneSurface : MonoBehaviour
     [SerializeField]
     public int length;
     [SerializeField]
+    public int maxHeight;
+    [SerializeField]
     public float planeLength;
 
-    Vector3[] arrayNodes;
-
+    GameObject[,] quads;
     Vector3[,] nodes;
+
+    public GameObject nodesParentTemp;
+    public List<GameObject> tmpNodeObjects;
+    public GameObject planesParent;
 
     private void Awake()
     {
+        maxHeight = (int)planeLength / 2;
+        tmpNodeObjects = new List<GameObject>();
         populateNodes();
         createPlanes();
     }
 
-    private void createPlanes()
+    private void Update()
     {
-        for (int i = 0; i < width; i++)
+        updateQuadVertices();
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            for (int j = 0; j < length; j++)
+            StartCoroutine(wave());
+        }
+    }
+
+    private void updateQuadVertices()
+    {
+        for (int i = 0; i < width - 1; i++)
+        {
+            for (int j = 0; j < length - 1; j++)
             {
-                // Create plane
-                GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                newObj.transform.parent = this.transform;
-                newObj.transform.localScale = new Vector3(width, 1f, length);
+                // Create mesh
+                Vector3[] vertices = new Vector3[4];
+                vertices[0] = nodes[i, j];
+                vertices[1] = nodes[i + 1, j];
+                vertices[2] = nodes[i, j + 1];
+                vertices[3] = nodes[i + 1, j + 1];
 
-                // Position plane
-                float xPosition = j * planeLength * (10 * newObj.transform.localScale.x);
-                float yPosition = nodes[i, j].y;
-                float zPosition = i * planeLength * (10 * newObj.transform.localScale.z);
-                newObj.transform.localPosition = new Vector3(xPosition, yPosition, zPosition);
-
-                // Angle plane
-                Vector3 from;
-                Vector3 to;
-                if ((i != 0) && 
-                    (j != 0) && 
-                    (i != width - 1) && 
-                    (j != length - 1))
-                {
-                    // X
-                    from = nodes[i, j - 1];
-                    to = nodes[i, j + 1];
-                    float angleX = from.x - to.x;
-
-                    // Y
-                    float angleY = 0f;
-
-                    // Z
-                    from = nodes[i - 1, j];
-                    to = nodes[i + 1, j];
-                    //float angleZ = Vector3.Angle(from, to);
-                    float angleZ = from.z - to.z;
-
-                    newObj.transform.eulerAngles = new Vector3(angleX, angleY, angleZ);
-                }
+                // Create mesh and assign it to mesh filter
+                Mesh mesh = createMesh(vertices);
+                quads[i, j].gameObject.GetComponent<MeshFilter>().mesh = mesh;
             }
         }
     }
 
-    //private void populateNodes()
-    //{
-    //    arrayNodes = new Vector3[width * length];
-    //    int counter = 0;
-    //    for (int i = 0; i < width; i++)
-    //    {
-    //        for (int j = 0; j < length; j++)
-    //        {
-    //            arrayNodes[counter] = new Vector3(
-    //                (i + 1) * planeLength,
-    //                Random.Range(0f, 10f),
-    //                (j + 1) * planeLength
-    //                );
-    //            counter++;
-    //        }
-    //    }
-    //}
+    private IEnumerator wave()
+    {
+        Debug.Log("Starting wave...");
+        // Apply modulation
+        int counter = 0;
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < length; j++)
+            {
+                counter++;
+                float x = nodes[i, j].x;
+                float y = Random.Range(0.1f, maxHeight);
+                float z = nodes[i, j].z;
+                nodes[i, j] = new Vector3(x, y, z);
+
+                    
+                updateQuadVertices();
+            }
+        }
+        yield return null;
+    }
+
+    private void createPlanes()
+    {
+        planesParent = new GameObject();
+        planesParent.transform.SetParent(this.transform);
+        planesParent.name = "Planes";
+
+        quads = new GameObject[width-1,length-1];
+
+        for (int i = 0; i < width - 1; i++)
+        {
+            for (int j = 0; j < length - 1; j++)
+            {
+                // Create plane
+                GameObject newPlane = new GameObject();
+                newPlane.transform.parent = planesParent.transform;
+
+                // Add renderer and filter
+                MeshRenderer meshRenderer = newPlane.gameObject.AddComponent<MeshRenderer>();
+                // Set material
+                meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
+                MeshFilter meshFilter = newPlane.gameObject.AddComponent<MeshFilter>();
+
+                // Create mesh
+                Vector3[] vertices = new Vector3[4];
+                vertices[0] = nodes[i, j];
+                vertices[1] = nodes[i + 1, j];
+                vertices[2] = nodes[i, j + 1];
+                vertices[3] = nodes[i + 1, j + 1];
+
+
+                // Create mesh and assign it to mesh filter
+                Mesh mesh = createMesh(vertices);
+                meshFilter.mesh = mesh;
+
+                quads[i, j] = newPlane;
+
+                // Position plane
+                //newPlane.transform.localPosition = calculateQuadWorldPosition(i, j);
+            }
+        }
+    }
+
+    private Vector3 calculateQuadWorldPosition(int i, int j)
+    {
+        // X
+        float xPosition = i;
+        float xOffset = planeLength/2;
+        xPosition -= xOffset;
+
+        // Y
+        float yPosition = nodes[i, j].y;
+        
+        // Z
+        float zPosition = j;
+        float zOffset = planeLength/2;
+        zPosition -= zOffset;
+
+        return new Vector3(i, yPosition, j);
+    }
+
+    private Mesh createMesh(Vector3[] _vertices)
+    {
+        Mesh mesh = new Mesh();
+
+        mesh.vertices = _vertices;
+
+        int[] tris = new int[6]
+        {
+            // lower left triangle
+            0, 2, 1,
+            // upper right triangle
+            2, 3, 1
+        };
+        mesh.triangles = tris;
+
+        Vector3[] normals = new Vector3[4]
+        {
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward
+        };
+        mesh.normals = normals;
+
+        Vector2[] uv = new Vector2[4]
+        {
+              new Vector2(0, 0),
+              new Vector2(1, 0),
+              new Vector2(0, 1),
+              new Vector2(1, 1)
+        };
+        mesh.uv = uv;
+
+        return mesh;
+    }
 
     private void populateNodes()
     {
         // Create new multi-dimensional array
         nodes = new Vector3[width, length];
+
+        // Create nodes parent
+        nodesParentTemp = new GameObject();
+        nodesParentTemp.transform.SetParent(this.transform);
+        nodesParentTemp.name = "Nodes";
 
         // Create temp floats
         float tmpX;
@@ -99,7 +196,7 @@ public class PlaneSurface : MonoBehaviour
             for (int j = 0; j < length; j++)
             {
                 // Determine components
-                tmpX = (i + 1) * planeLength;
+                tmpX = (i) * planeLength;
 
                 // Make outside flat
                 if (i == 0 || j == 0 || i == width || j == length)
@@ -108,42 +205,20 @@ public class PlaneSurface : MonoBehaviour
                 }
                 else
                 {
-                    tmpY = Random.Range(0f, 10f);
+                    tmpY = Random.Range(0f, maxHeight);
                 }
 
-                tmpZ = (j + 1) * planeLength;
+                tmpZ = (j) * planeLength;
 
                 // Add vector to array
                 nodes[i,j] = new Vector3(tmpX, tmpY, tmpZ);
+
+                //// Create temp visual object
+                //GameObject tmpNodeSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                //tmpNodeSphere.transform.SetParent(nodesParentTemp.transform);
+                //tmpNodeSphere.transform.position = nodes[i, j];
+                //tmpNodeSphere.transform.localScale = Vector3.one * 0.2f;
             }
         }
     }
-
-    #region old methods
-
-    private void createSurface(Vector3[,] v)
-    {
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < length; j++)
-            {
-                // Create plane
-                GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                newObj.transform.parent = this.transform;
-                newObj.transform.localScale = new Vector3(width, 1f, length);
-
-                // Position plane
-                //Vector3 angle = Vector3.Angle()
-                newObj.transform.localPosition = new Vector3(
-                    j * planeLength * 20f,
-                    0f,
-                    i * planeLength * 20f
-                    );
-
-
-
-            }
-        }
-    }
-    #endregion
 }

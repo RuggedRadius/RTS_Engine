@@ -152,7 +152,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 10
   length: 10
-  planeLength: 1
+  maxHeight: 50
+  planeLength: 2
+  nodesParentTemp: {fileID: 0}
+  tmpNodeObjects: []
+  planesParent: {fileID: 0}
 --- !u!4 &344177613
 Transform:
   m_ObjectHideFlags: 0

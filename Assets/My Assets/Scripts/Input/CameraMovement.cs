@@ -8,52 +8,44 @@ public class CameraMovement : MonoBehaviour
     [Header("References")]
     [SerializeField]
     private Camera cam;
-
     [SerializeField]
     private GameObject focalPoint;
-
     [SerializeField]
     private Terrain terrain;
 
-    [Header("Settings")]
+    [Header("Camera Settings")]
     [SerializeField]
     public float camHeightCur;
     [SerializeField]
-    public float camHeightMin;
+    private float camHeightMin;
     [SerializeField]
-    public float camHeightMax;
-    [SerializeField]
-    public float curTerrainHeight;
-
-
+    private float camHeightMax;
     [SerializeField]
     private float camDistance;
-
-    [SerializeField]
-    private float camAngle;
-
-    [SerializeField]
-    private float keyboardMovementSpeed;
-
-    [SerializeField]
-    float scrollSpeedMin;
-    [SerializeField]
-    float scrollSpeedMax;
-    [SerializeField]
-    float scrollSpeedCur;
-
-    [SerializeField]
-    private float camRotationSpeed;
-
     [SerializeField]
     private LayerMask heightGatherLayerMask;
 
-    //[SerializeField]
-    //private float camZoomSpeed;
+    [Header("Speeds")]
+    [SerializeField]
+    private float keyboardMovementSpeed;
+    [SerializeField]
+    private float scrollSpeedMin;
+    [SerializeField]
+    private float scrollSpeedMax;
+    [SerializeField]
+    private float scrollSpeedCur;
+    [SerializeField]
+    private float camRotationSpeed;
+    [SerializeField]
+    private float zoomSpeedMin;
+    [SerializeField]
+    private float zoomSpeedMax;
+    [SerializeField]
+    private float zoomSpeedCur;
 
-    float focalX;
-    float focalY;
-    float focalZ;
+    private float focalX;
+    private float focalY;
+    private float focalZ;
 
     private void Start()
     {
@@ -82,14 +74,15 @@ public class CameraMovement : MonoBehaviour
     {
         if (Input.mouseScrollDelta.y != 0)
         {
-            camHeightCur -= Input.mouseScrollDelta.y * calcZoomSpeed();
+            zoomSpeedCur = calcZoomSpeed();
+            camHeightCur -= Input.mouseScrollDelta.y * zoomSpeedCur;
             positionCamera();
         }
     }
 
     private float calcZoomSpeed()
     {
-        return Mathf.Lerp(50f, 250f, camHeightCur / camHeightMax);
+        return Mathf.Lerp(zoomSpeedMin, zoomSpeedMax, camHeightCur / camHeightMax);
     }
 
     private void getKeyboardInputs()
@@ -121,7 +114,7 @@ public class CameraMovement : MonoBehaviour
     }
     private float getHeightFromPosition(Vector3 position)
     {
-        Vector3 modifiedPosition = new Vector3(position.x, terrain.terrainData.size.y, position.z);
+        Vector3 modifiedPosition = new Vector3(position.x, 1000f, position.z);
         Ray ray = new Ray(modifiedPosition, -transform.up);
         Debug.DrawRay(ray.origin, ray.direction, Color.red, 3f);
         if (Physics.Raycast(ray, out RaycastHit hit))
@@ -143,33 +136,33 @@ public class CameraMovement : MonoBehaviour
         focalX = focalPoint.transform.position.x;
         focalZ = focalPoint.transform.position.z;
 
-        // Limit X-Axis
-        if (focalPoint.transform.position.x < terrain.transform.position.x)
-        {
-            Debug.Log("Below X Min");
-            focalX = terrain.transform.position.x; // X value up
-            focalZ = focalPoint.transform.position.z;
-        }
-        if (focalPoint.transform.position.x > terrain.transform.position.x + terrain.terrainData.size.x)
-        {
-            Debug.Log("Above X Max");
-            focalX = terrain.transform.position.x + terrain.terrainData.size.x; // X value down
-            focalZ = focalPoint.transform.position.z;
-        }
+        //// Limit X-Axis
+        //if (focalPoint.transform.position.x < terrain.transform.position.x)
+        //{
+        //    Debug.Log("Below X Min");
+        //    focalX = terrain.transform.position.x; // X value up
+        //    focalZ = focalPoint.transform.position.z;
+        //}
+        //if (focalPoint.transform.position.x > terrain.transform.position.x + terrain.terrainData.size.x)
+        //{
+        //    Debug.Log("Above X Max");
+        //    focalX = terrain.transform.position.x + terrain.terrainData.size.x; // X value down
+        //    focalZ = focalPoint.transform.position.z;
+        //}
 
-        // Limit Z-Axis
-        if (focalPoint.transform.position.z < terrain.transform.position.z)
-        {
-            Debug.Log("Below Z Min");
-            focalX = focalPoint.transform.position.x;
-            focalZ = terrain.transform.position.z; // Z Axis up
-        }
-        if (focalPoint.transform.position.z > terrain.transform.position.z + terrain.terrainData.size.z)
-        {
-            Debug.Log("Above Z Max");
-            focalX = focalPoint.transform.position.x;
-            focalZ = terrain.transform.position.z + terrain.terrainData.size.z; // Z Axis Down
-        }
+        //// Limit Z-Axis
+        //if (focalPoint.transform.position.z < terrain.transform.position.z)
+        //{
+        //    Debug.Log("Below Z Min");
+        //    focalX = focalPoint.transform.position.x;
+        //    focalZ = terrain.transform.position.z; // Z Axis up
+        //}
+        //if (focalPoint.transform.position.z > terrain.transform.position.z + terrain.terrainData.size.z)
+        //{
+        //    Debug.Log("Above Z Max");
+        //    focalX = focalPoint.transform.position.x;
+        //    focalZ = terrain.transform.position.z + terrain.terrainData.size.z; // Z Axis Down
+        //}
 
         // Y-Axis
         focalY = getHeightFromPosition(focalPoint.transform.position);

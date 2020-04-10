@@ -92,6 +92,7 @@
     <Compile Include="Assets\My Assets\Scripts\UI\AdjustScreenDisplayPanels.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\MiniMap.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\Minimap3D.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\uiControlSelection.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\uiDisplaySingleUnit.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\uiSelection.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\UI nvjob\UINvjob.cs" />
     <Compile Include="Assets\NVJOB Water Shader SAF\Water Shader\Water.cs" />
     <Compile Include="Assets\NVJOB Water Shader SAF\Water Shader\WindZoneRot.cs" />
+    <Compile Include="Assets\ResourcesManager.cs" />
     <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\ScreenSpaceReflection.shader" />
     <None Include="Assets\NVJOB Water Shader SAF\license_nvjob.txt" />
     <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\Materials\Trees\STBCustomCore.cginc" />
@@ -223,31 +225,31 @@
     <None Include="Assets\NVJOB Water Shader SAF\Water Shader\Water Shader Type 1.shader" />
     <None Include="Assets\Shaders\SlopeFlatten.shader" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
