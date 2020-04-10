@@ -8,106 +8,19 @@ public class PlaneSurface : MonoBehaviour
     public int width;
     [SerializeField]
     public int length;
-
     [SerializeField]
     public float planeLength;
 
     Vector3[] arrayNodes;
 
-    [SerializeField]
-    private GameObject lineParticlePrefab;
-    [SerializeField]
-    public List<GameObject> rows;
+    Vector3[,] nodes;
 
     private void Awake()
     {
         populateNodes();
-        rows = new List<GameObject>();
-        drawRows();
-        drawColumns();
-
+        createPlanes();
     }
 
-    private void drawColumns()
-    {
-        GameObject columns = new GameObject();
-        columns.transform.parent = this.transform;
-        //columns.transform.eulerAngles = new Vector3(0, 90, 0);
-
-        int counter = 0;
-        for (int i = 0; i < length; i++)
-        {
-            // Create row of points
-            Vector3[] rowPoints = new Vector3[length];
-
-            // Populate points
-            for (int j = 0; j < width; j++)
-            {
-                rowPoints[j] = arrayNodes[counter];
-                counter++;
-            }
-
-            // Create row
-            createRow(rowPoints, columns.transform);
-        }
-
-        //columns.transform.eulerAngles = new Vector3(0, 90, 0);
-    }
-
-    private void drawRows()
-    {
-        GameObject rows = new GameObject();
-        rows.transform.parent = this.transform;
-
-        int counter = 0;
-        for (int i = 0; i < width; i++)
-        {
-            // Create row of points
-            Vector3[] rowPoints = new Vector3[length];
-
-            // Populate points
-            for (int j = 0; j < length; j++)
-            {
-                rowPoints[j] = arrayNodes[counter];
-                counter++;
-            }
-
-            // Create row
-            createRow(rowPoints, rows.transform);
-        }
-
-        //rows.transform.position = new Vector3(0, 0, -(width + 1));
-    }
-
-
-
-    private void createRow(Vector3[] rowPoints, Transform parent)
-    {
-        GameObject newRow = Instantiate(lineParticlePrefab);
-        newRow.transform.parent = parent;
-        newRow.GetComponent<LineParticle>().m_Points = rowPoints;
-        rows.Add(newRow);
-    }
-
-    private void populateNodes()
-    {
-        arrayNodes = new Vector3[width * length];
-        int counter = 0;
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < length; j++)
-            {
-                arrayNodes[counter] = new Vector3(
-                    (i + 1) * planeLength,
-                    Random.Range(0f, 2f),
-                    (j + 1) * planeLength
-                    );
-                counter++;
-            }
-        }
-    }
-
-    #region old methods
     private void createPlanes()
     {
         for (int i = 0; i < width; i++)
@@ -120,16 +33,94 @@ public class PlaneSurface : MonoBehaviour
                 newObj.transform.localScale = new Vector3(width, 1f, length);
 
                 // Position plane
-                //Vector3 angle = Vector3.Angle();
-                newObj.transform.localPosition = new Vector3(
-                    j * planeLength * (10 * newObj.transform.localScale.x),
-                    0f,
-                    i * planeLength * (10 * newObj.transform.localScale.z)
-                    );
-                //newObj.transform.localPosition = grid.
+                float xPosition = j * planeLength * (10 * newObj.transform.localScale.x);
+                float yPosition = nodes[i, j].y;
+                float zPosition = i * planeLength * (10 * newObj.transform.localScale.z);
+                newObj.transform.localPosition = new Vector3(xPosition, yPosition, zPosition);
+
+                // Angle plane
+                Vector3 from;
+                Vector3 to;
+                if ((i != 0) && 
+                    (j != 0) && 
+                    (i != width - 1) && 
+                    (j != length - 1))
+                {
+                    // X
+                    from = nodes[i, j - 1];
+                    to = nodes[i, j + 1];
+                    float angleX = from.x - to.x;
+
+                    // Y
+                    float angleY = 0f;
+
+                    // Z
+                    from = nodes[i - 1, j];
+                    to = nodes[i + 1, j];
+                    //float angleZ = Vector3.Angle(from, to);
+                    float angleZ = from.z - to.z;
+
+                    newObj.transform.eulerAngles = new Vector3(angleX, angleY, angleZ);
+                }
             }
         }
     }
+
+    //private void populateNodes()
+    //{
+    //    arrayNodes = new Vector3[width * length];
+    //    int counter = 0;
+    //    for (int i = 0; i < width; i++)
+    //    {
+    //        for (int j = 0; j < length; j++)
+    //        {
+    //            arrayNodes[counter] = new Vector3(
+    //                (i + 1) * planeLength,
+    //                Random.Range(0f, 10f),
+    //                (j + 1) * planeLength
+    //                );
+    //            counter++;
+    //        }
+    //    }
+    //}
+
+    private void populateNodes()
+    {
+        // Create new multi-dimensional array
+        nodes = new Vector3[width, length];
+
+        // Create temp floats
+        float tmpX;
+        float tmpY;
+        float tmpZ;
+        
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < length; j++)
+            {
+                // Determine components
+                tmpX = (i + 1) * planeLength;
+
+                // Make outside flat
+                if (i == 0 || j == 0 || i == width || j == length)
+                {
+                    tmpY = 0f;
+                }
+                else
+                {
+                    tmpY = Random.Range(0f, 10f);
+                }
+
+                tmpZ = (j + 1) * planeLength;
+
+                // Add vector to array
+                nodes[i,j] = new Vector3(tmpX, tmpY, tmpZ);
+            }
+        }
+    }
+
+    #region old methods
+
     private void createSurface(Vector3[,] v)
     {
         for (int i = 0; i < width; i++)
