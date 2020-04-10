@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static Interfaces;
 
 [Serializable]
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour, IMovable
 {
+    #region Properties
     [Header("Unit Information")]
     [SerializeField]
     public string unitName;
-
     [Header("Stats")]
     [SerializeField]
     [Range(5f, 20f)]
@@ -19,24 +20,22 @@ public class Unit : MonoBehaviour
     public float unitDamageBase;
     [SerializeField]
     public float unitBuildTime;
-
     [Header("Prefab")]
     [SerializeField]
     public GameObject prefab;
-
     [Header("State")]
     public bool moving;
-
     [Header("References")]
     [SerializeField]
     private Animator anim;
-
     [Header("Settings")]
     [SerializeField]
     private float destinationTolerance;
     
     private NavMeshAgent agent;
+    #endregion
 
+    #region MonoBehaviour
     void Start()
     {
         agent = this.gameObject.AddComponent<NavMeshAgent>();
@@ -44,22 +43,39 @@ public class Unit : MonoBehaviour
 
     private void Update()
     {
-        // Update animator values
-        updateAnimatorValues();
-
-        // Check if close to destination
-        checkDestinationTolerance();
-
-
+        if (moving)
+        {
+            // Check if close to destination
+            checkDestination();
+        }
     }
+    #endregion
 
+    #region IMovable interface
     public void move(Vector3 destination)
     {
         moving = true;
         agent.SetDestination(destination);
+
+        // Update animator values
+        updateAnimatorValues();
     }
 
-    private void checkDestinationTolerance()
+    public void stopMoving()
+    {
+        agent.SetDestination(agent.nextPosition);
+        moving = false;
+
+        // Update animator values
+        updateAnimatorValues();
+    }
+    #endregion
+
+    private void updateAnimatorValues()
+    {
+        anim.SetBool("Moving", moving);
+    }
+    private void checkDestination()
     {
         // If all 3 components of the vector 3 are withinn tolerance
         if (
@@ -73,12 +89,6 @@ public class Unit : MonoBehaviour
             moving = false;
         }
     }
-
-    private void updateAnimatorValues()
-    {
-        anim.SetBool("Moving", moving);
-    }
-
     private Vector3 distanceToDestination(Vector3 _destination)
     {
         return new Vector3( 

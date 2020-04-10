@@ -8,4 +8,17 @@ public class Interfaces
     {
         void createUnit(Unit unit);
     }
+
+    public interface IAttacking
+    {
+        void attack(GameObject target);
+        void attack(Vector3 position);
+        void stopAttack();
+    }
+
+    public interface IMovable
+    {
+        void move(Vector3 destination);
+        void stopMoving();
+    }
 }

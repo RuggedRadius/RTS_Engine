@@ -92,6 +92,7 @@
     <Compile Include="Assets\My Assets\Scripts\UI\MiniMap.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\Minimap3D.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\uiControlSelection.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\uiDisplaySingleUnit.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\uiSelection.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\Selectable.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\SelectionManager.cs" />
