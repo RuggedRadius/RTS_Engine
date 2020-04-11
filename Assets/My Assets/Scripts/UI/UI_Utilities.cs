@@ -1,42 +1,58 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Remoting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public static class UI_Utilities
+public class UI_Utilities : MonoBehaviour
 {
-    public static GameObject createTile(Unit unit)
-    {
-        GameObject newTile = new GameObject();
-        newTile.name = unit.unitName;
+    public UI_Manager uiManager;
 
-        Image img = newTile.AddComponent<Image>();
-        img.sprite = unit.uiTileSprite;
-        img.color = Color.red;
+    [SerializeField]
+    private GameObject uiTilePrefab;
+
+    public GameObject createTile(Unit unit)
+    {
+        // Create button prefab
+        GameObject newTile = Instantiate(uiTilePrefab);
+        newTile.transform.parent = uiManager.panelSelection.transform;
+
+        // Set Sprite
+        Button btn = newTile.GetComponent<Button>();
+        Image btnImage = newTile.GetComponent<Image>();
+        btnImage.sprite = unit.uiTileSprite;
+
+        // Add OnClick Events
+        //...
 
         return newTile;
     }
-    public static GameObject createTile(Structure structure)
+    public GameObject createTile(Structure structure)
     {
-        GameObject newTile = new GameObject();
-        Image img = newTile.AddComponent<Image>();
+        // Create button prefab
+        GameObject newTile = Instantiate(uiTilePrefab);
+        newTile.transform.parent = uiManager.panelSelection.transform;
 
-        newTile.name = structure.structureName;
-        img.sprite = structure.uiTileSprite;
-        img.color = Color.blue;
+        // Set Sprite
+        Button btn = newTile.GetComponent<Button>();
+        Image btnImage = newTile.GetComponent<Image>();
+        btnImage.sprite = structure.uiTileSprite;
+
+        // Add OnClick Events
+        //...
 
         return newTile;
     }
-    public static GameObject createTile(Action action)
+    public GameObject createTile(Action action)
     {
-        GameObject newTile = new GameObject();
-        Image img = newTile.AddComponent<Image>();
+        // Create button prefab
+        GameObject newTile = Instantiate(uiTilePrefab);
+        newTile.transform.parent = uiManager.panelAction.transform;
 
-        newTile.name = action.actionName;
-        img.sprite = action.uiTileSprite;
-        img.color = Color.green;
+        // Set Sprite
+        Button btn = newTile.GetComponent<Button>();
+        Image btnImage = newTile.GetComponent<Image>();
+        btnImage.sprite = action.uiTileSprite;
+
+        // Add OnClick Events
+        //...
 
         return newTile;
     }

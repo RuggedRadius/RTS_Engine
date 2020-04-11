@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class UI_Manager : MonoBehaviour
 {
+    public bool mouseOverUI;
+
     [Header("Panels")]
     [SerializeField]
     public RectTransform panelTop;
@@ -26,11 +28,12 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     public UI_ActionPanel panelAction;
 
-
     void Start()
     {
         sizeMainPanels();
         sizeInteractionSubPanels();
+
+        //panelBottom.
     }
 
     public void sizeMainPanels()

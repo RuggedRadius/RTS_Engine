@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class uiControlSelection : MonoBehaviour
+public class UI_DrawSelectionRect : MonoBehaviour
 {
 
     [SerializeField]

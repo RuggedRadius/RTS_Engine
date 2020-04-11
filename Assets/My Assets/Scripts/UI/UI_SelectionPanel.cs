@@ -8,19 +8,19 @@ public class UI_SelectionPanel : MonoBehaviour
 {
     #region Properties
     private UI_Manager uiManager;
-
-    public List<GameObject> currentSelection = new List<GameObject>();
+    public List<GameObject> currentSelection;
     #endregion
 
     #region MonoBehaviour
     private void Start()
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
+        currentSelection = new List<GameObject>();
     }
     #endregion
 
     #region UI Methods
-    public void updateUISelectionDisplay()
+    public void updateUITiles()
     {
         // Clear the UI selections
         clearCurrentUISelections();
@@ -36,43 +36,51 @@ public class UI_SelectionPanel : MonoBehaviour
 
     private void DisplayStructures()
     {
-        Debug.Log("Displaying structure(s)...");
         currentSelection.Clear();
 
-        foreach (Structure _structure in SelectionManager.selectedStructures)
+        if (SelectionManager.selectedStructures.Count == 1)
         {
-            // Determine if single or multiple display
-            bool multiple;
-            if (SelectionManager.selectedStructures.Count > 1)
-                multiple = true;
-            else
-                multiple = false;
-
-            // Display to UI
-            //GameObject go = createUIObject_Structure(_structure, multiple);
-            GameObject go = UI_Utilities.createTile(_structure);
-
-
-
-            /// PROBLEM HERE ^^^^^^^^^^^^^^^^^^^^^^^!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            /// PROBLEM HERE ^^^^^^^^^^^^^^^^^^^^^^^!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            /// PROBLEM HERE ^^^^^^^^^^^^^^^^^^^^^^^!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            /// PROBLEM HERE ^^^^^^^^^^^^^^^^^^^^^^^!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            /// PROBLEM HERE ^^^^^^^^^^^^^^^^^^^^^^^!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            /// PROBLEM HERE ^^^^^^^^^^^^^^^^^^^^^^^!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            // Add to currently selected structures
-            currentSelection.Add(go);
-
-            // Populate actions UI panel
-            if (!multiple)
+            foreach (Unit unit in SelectionManager.selectedStructures[0].productionQueue)
             {
-                uiManager.panelAction.DisplayStructureActions(SelectionManager.selectedStructures[0]);
+                // Display to UI
+                GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
+
+                // Populate information UI panel
+                // ...
             }
 
-            // Populate information UI panel
-            // ...
+            // Populate actions UI panel
+            uiManager.panelAction.DisplayStructureActions(SelectionManager.selectedStructures[0]);
         }
+        else
+        {
+            foreach (Structure _structure in SelectionManager.selectedStructures)
+            {
+                // Determine if single or multiple display
+                bool multiple;
+                if (SelectionManager.selectedStructures.Count > 1)
+                    multiple = true;
+                else
+                    multiple = false;
+
+                // Display to UI
+                GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(_structure);
+
+                // Add to currently selected structures
+                currentSelection.Add(go);
+
+                // Populate actions UI panel
+                if (!multiple)
+                {
+                    uiManager.panelAction.DisplayStructureActions(SelectionManager.selectedStructures[0]);
+                }
+
+                // Populate information UI panel
+                // ...
+            }
+        }
+
+
     }
     private void DisplayUnits()
     {
@@ -89,7 +97,7 @@ public class UI_SelectionPanel : MonoBehaviour
 
             // Display to UI
             //GameObject go = createUIObject_Unit(unit, multiple);
-            GameObject go = UI_Utilities.createTile(unit);
+            GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
 
             // Add to currently selected units
             currentSelection.Add(go);
@@ -104,43 +112,18 @@ public class UI_SelectionPanel : MonoBehaviour
             // ...
         }
         
-    }
-    private GameObject createUIObject_Structure(Structure structure, bool multiple = false)
-    {
-        // Create object
-        GameObject _structure = new GameObject();
-        _structure.name = structure.structureName;
-        _structure.transform.parent = this.transform;
-
-        // Add temp image
-        Image img = _structure.AddComponent<Image>();
-        img.color = Color.blue;
-
-        return _structure;
-    }
-
-    private GameObject createUIObject_Unit(Unit unit, bool multiple = false)
-    {
-        // Create object
-        GameObject _unit = new GameObject();
-        _unit.name = unit.unitName;
-        _unit.transform.parent = this.transform;
-
-        // Add temp image
-        Image img = _unit.AddComponent<Image>();
-        img.color = Color.red;
-
-        return _unit;
-    }
-
-    
+    }    
 
     private void clearCurrentUISelections()
     {
+        // Clear selection panel
         for (int i = 0; i < currentSelection.Count; i++)
         {
             Destroy(currentSelection[i]);
         }
+
+        // Clear actions panel
+        uiManager.panelAction.clearCurrentUIActions();
     }
     #endregion
 }

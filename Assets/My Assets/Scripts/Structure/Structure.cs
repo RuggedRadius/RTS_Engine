@@ -13,11 +13,16 @@ public class Structure : MonoBehaviour, IUnitProducing
     [SerializeField]
     public string structureName;
     [SerializeField]
-    public List<GameObject> producables;
+    public List<GameObject> producableUnits;
     [SerializeField]
     public GameObject productionFXPrefab;
     [SerializeField]
     public Sprite uiTileSprite;
+
+    [SerializeField]
+    public Queue<Unit> productionQueue;
+
+
 
     public bool creatingUnit;
 
@@ -30,10 +35,25 @@ public class Structure : MonoBehaviour, IUnitProducing
     {
         // Initialise script references
         resourcesManager = GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourcesManager>();
+        productionQueue = new Queue<Unit>();
+    }
+
+    void Update()
+    {
+        // If queue contains units, produce them
+        if (productionQueue.Count > 0)
+        {
+            if (!creatingUnit)
+            {
+                StartCoroutine(unitCreation(productionQueue.Peek()));
+                productionQueue.Dequeue();
+            }
+        }
     }
 
     public void createUnit(Unit unit)
     {
+        print("Attempting to create " + unit.unitName);
         foreach (ResourceCost rc in unit.resourceCosts)
         {
             // Determine amounts
@@ -55,16 +75,7 @@ public class Structure : MonoBehaviour, IUnitProducing
         }
 
         // If not returned by now, resources are available
-        if (creatingUnit)
-        {
-            // Add new unit to que
-            //..
-        }
-        else
-        {
-            // Train unit
-            StartCoroutine(unitCreation(unit));
-        }
+        productionQueue.Enqueue(unit);
     }
 
     private IEnumerator unitCreation(Unit unit)

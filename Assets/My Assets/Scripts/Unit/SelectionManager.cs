@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class SelectionManager : MonoBehaviour
 {
@@ -41,13 +43,10 @@ public class SelectionManager : MonoBehaviour
     [SerializeField]
     private GameObject targetLocationPrefab;
 
-
     private Vector3 lastTargetLocation;
     private GameObject lastTargetLocationObject;
     private Ray targetRay;
 
-    //[Header("Scripts")]
-    //[SerializeField]
     private UI_Manager uiManager;
 
     private void Start()
@@ -74,21 +73,66 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
+    private bool isMouseOverUI()
+    {
+        //Set up the new Pointer Event
+        PointerEventData m_PointerEventData = new PointerEventData(uiManager.GetComponent<EventSystem>());
+
+        //Set the Pointer Event Position to that of the mouse position
+        m_PointerEventData.position = Input.mousePosition;
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        //Raycast using the Graphics Raycaster and mouse click position
+        uiManager.GetComponent<GraphicRaycaster>().Raycast(m_PointerEventData, results);
+
+        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+        if (results[0].gameObject.layer == 5)
+        {
+            // Mouse is over UI
+            return true;
+        }
+        else
+        {
+            // Mouse is not over UI
+            return false;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        
+
         // Begin selection
         if (Input.GetMouseButtonDown(0))
         {
-            selectionStarted = true;
-            mousePosition1 = Input.mousePosition;
-            
+            if (isMouseOverUI())
+            {
+                // Mouse is over UI
+            }
+            else
+            {
+                // Mouse is not over UI
+                selectionStarted = true;
+                mousePosition1 = Input.mousePosition;
+            }
         }
         // End selection
         if (Input.GetMouseButtonUp(0))
         {
-            selectionStarted = false;
-            uiManager.panelSelection.updateUISelectionDisplay();
+            if (isMouseOverUI())
+            {
+                // Mouse is over UI
+                selectionStarted = false;
+            }
+            else
+            {
+                // Mouse is not over UI
+                selectionStarted = false;
+                uiManager.panelSelection.updateUITiles();
+            }
         }
 
         if (selectionStarted)
@@ -122,11 +166,7 @@ public class SelectionManager : MonoBehaviour
                     if (selectables[i].gameObject.GetComponent<Structure>() != null)
                     {
                         Debug.Log("Selecting structure");
-
-                        if (!selectedStructures.Contains(selectables[i].gameObject.GetComponent<Structure>()))
-                        {
-                            selectedStructures.Add(selectables[i].gameObject.GetComponent<Structure>());
-                        }
+                        selectedStructures.Add(selectables[i].gameObject.GetComponent<Structure>());
                     }
                 }
             }

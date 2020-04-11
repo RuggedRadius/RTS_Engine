@@ -6,28 +6,29 @@ using static Interfaces;
 
 public class UI_ActionPanel : MonoBehaviour
 {
-    [SerializeField]
     private UI_Manager uiManager;
+    private UI_Utilities uiUtils;
+
+    public List<GameObject> currentActionTiles;
 
     // Start is called before the first frame update
     void Start()
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        uiUtils = this.transform.root.GetComponent<UI_Utilities>();
+        currentActionTiles = new List<GameObject>();
     }
 
     public void DisplayUnitActions(Unit unit)
     {
+        clearCurrentUIActions();
 
     }
 
     public void DisplayStructureActions(Structure structure)
     {
+        clearCurrentUIActions();
+
         // Iterate through all functions of structure
         if (structure is IAttacking)
         {
@@ -41,6 +42,29 @@ public class UI_ActionPanel : MonoBehaviour
             Image img = _structure.AddComponent<Image>();
             img.color = Color.blue;
         }
-        //...
+        if (structure is IUnitProducing)
+        {
+            foreach (GameObject unitPrefab in structure.producableUnits)
+            {
+                Unit unit = unitPrefab.GetComponent<Unit>();
+                Action newAction = new Action("Create " + unit.unitName, unit.uiTileSprite);
+                GameObject newProducableUnitTile = uiUtils.createTile(newAction);
+                currentActionTiles.Add(newProducableUnitTile);
+
+                // Button event
+                newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate() {                    
+                    structure.createUnit(unitPrefab.GetComponent<Unit>());
+                });
+            }
+        }
+    }
+
+    public void clearCurrentUIActions()
+    {
+        Debug.Log("Clearing actions");
+        for (int i = 0; i < currentActionTiles.Count; i++)
+        {
+            Destroy(currentActionTiles[i]);
+        }
     }
 }
