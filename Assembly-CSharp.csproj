@@ -80,176 +80,78 @@
     <Compile Include="Assets\LineParticle\Scripts\CameraRotate.cs" />
     <Compile Include="Assets\LineParticle\Scripts\LineParticle.cs" />
     <Compile Include="Assets\LineParticle\Scripts\Test.cs" />
+    <Compile Include="Assets\My Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\My Assets\Scripts\Input\CameraMovement.cs" />
     <Compile Include="Assets\My Assets\Scripts\Interfaces.cs" />
     <Compile Include="Assets\My Assets\Scripts\PlaneSurface.cs" />
     <Compile Include="Assets\My Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\My Assets\Scripts\ResourcesManager.cs" />
     <Compile Include="Assets\My Assets\Scripts\SelfDestruct.cs" />
     <Compile Include="Assets\My Assets\Scripts\Structure.cs" />
     <Compile Include="Assets\My Assets\Scripts\Surface.cs" />
     <Compile Include="Assets\My Assets\Scripts\TerrainGridOverlay.cs" />
     <Compile Include="Assets\My Assets\Scripts\TestCamera.cs" />
-    <Compile Include="Assets\My Assets\Scripts\UI\AdjustScreenDisplayPanels.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\MiniMap.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\Minimap3D.cs" />
-    <Compile Include="Assets\My Assets\Scripts\UI\UIManager.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\UI_ActionPanel.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\UI_InformationPanel.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\UI_Manager.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\UI_SelectionPanel.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\UI_Utilities.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\testUI.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\uiControlSelection.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\uiDisplaySingleUnit.cs" />
-    <Compile Include="Assets\My Assets\Scripts\UI\uiSelection.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Unit\Action.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\Selectable.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\SelectionManager.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\Unit.cs" />
     <Compile Include="Assets\My Assets\Scripts\UnitDictionary.cs" />
     <Compile Include="Assets\My Assets\Scripts\World\Sun.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\Dynamic Sky Lite\DynamicSkyLite.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\FPS Counter\FPSCounter.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Attributes\TrackballGroupAttribute.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\AmbientOcclusionComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\BloomComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\BuiltinDebugViewsComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\ChromaticAberrationComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\ColorGradingComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\DepthOfFieldComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\DitheringComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\EyeAdaptationComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\FogComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\FxaaComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\GrainComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\MotionBlurComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\ScreenSpaceReflectionComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\TaaComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\UserLutComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Components\VignetteComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\AmbientOcclusionModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\AntialiasingModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\BloomModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\BuiltinDebugViewsModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\ChromaticAberrationModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\ColorGradingModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\DepthOfFieldModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\DitheringModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\EyeAdaptationModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\FogModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\GrainModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\MotionBlurModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\ScreenSpaceReflectionModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\UserLutModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Models\VignetteModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\PostProcessingBehaviour.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\PostProcessingComponent.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\PostProcessingContext.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\PostProcessingModel.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\PostProcessingProfile.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Utils\ColorGradingCurve.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Utils\GraphicsUtils.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\Prefabs\Rotation.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Example Scenes\UI nvjob\UINvjob.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Water Shader\Water.cs" />
-    <Compile Include="Assets\NVJOB Water Shader SAF\Water Shader\WindZoneRot.cs" />
-    <Compile Include="Assets\ResourcesManager.cs" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\ScreenSpaceReflection.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\license_nvjob.txt" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\Materials\Trees\STBCustomCore.cginc" />
     <None Include="Assets\Shaders\SmudgeHeight.shader" />
     <None Include="Assets\Shaders\TerraceErosion.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\Dynamic Sky Lite\Dynamic Sky Lite Standard Clouds Type 2.shader" />
     <None Include="Assets\JMO Assets\Cartoon FX\Shaders\CFX3 Multiply Color.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\GrainGen.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\Monitors\HistogramCompute.compute" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\FXAA3.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\EyeAdaptation.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Utilities\CustomMotionTexture\Shaders\CustomMotionVectorTexture.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\UI\CurveBackground.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Water Shader\Water Shader Type 2.shader" />
     <None Include="Assets\JMO Assets\Cartoon FX\CartoonFX Free.txt" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\BuiltinDebugViews.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\EyeAdaptation.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\LutGen.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\Materials\Trees\STCustom.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\EyeHistogram.compute" />
     <None Include="Assets\Shaders\TwistHeight.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\TAA.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\AmbientOcclusion.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\Dynamic Sky Lite\Dynamic Sky Lite Standard Horizon.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\Materials\Trees\STCustomCore.cginc" />
     <None Include="Assets\Shaders\SharpenHeight.shader" />
     <None Include="Assets\JMO Assets\Cartoon FX Easy Editor\CartoonFX Easy Editor Readme.txt" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\Monitors\VectorscopeCompute.compute" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\ColorGrading.cginc" />
     <None Include="Assets\Shaders\PinchHeight.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\Monitors\HistogramRender.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\UberSecondPass.cginc" />
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Bluenoise64\LICENSE.txt" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\ACES.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\MotionBlur.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\AmbientOcclusion.shader" />
     <None Include="Assets\Shaders\SetExactHeight.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\FXAA.shader" />
     <None Include="Assets\Shaders\ErodeHeight.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\ScreenSpaceRaytrace.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\Tonemapping.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\Fog.shader" />
     <None Include="Assets\Shaders\RidgeErode.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\Monitors\ParadeRender.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\MotionBlur.shader" />
     <None Include="Assets\GE Common Assets\Readme.txt" />
-    <None Include="Assets\NVJOB Water Shader SAF\license_unity.txt" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\DiskKernels.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Bluenoise64\COPYING.txt" />
     <None Include="Assets\Shaders\MeshStamp.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\UI\Trackball.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\Materials\Trees\STBCustom.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\Monitors\WaveformRender.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\Common.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\Monitors\VectorscopeRender.shader" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\Shaders\CloneBrush.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\Bloom.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\Uber.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\DepthOfField.shader" />
     <None Include="Assets\JMO Assets\Cartoon FX\Shaders\CFXM_MobileParticleAdd_Alpha8.shader" />
     <None Include="Assets\Five Seamless Tileable Ground Textures\read me.txt" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\TAA.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\Dynamic Sky Lite\Dynamic Sky Lite Standard Clouds Type 1.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\Blit.shader" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\Bloom.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Editor Resources\Monitors\WaveformCompute.compute" />
-    <None Include="Assets\NVJOB Water Shader SAF\Example Scenes\PostProcessing\Resources\Shaders\DepthOfField.cginc" />
-    <None Include="Assets\NVJOB Water Shader SAF\Water Shader\Water Shader Type 1.shader" />
     <None Include="Assets\Shaders\SlopeFlatten.shader" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

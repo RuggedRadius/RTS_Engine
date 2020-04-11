@@ -11,21 +11,20 @@ using static Unit;
 public class Structure : MonoBehaviour, IUnitProducing
 {
     [SerializeField]
-    private ResourcesManager resourcesManager;
-
-    [SerializeField]
     public string structureName;
-
     [SerializeField]
     public List<GameObject> producables;
-
     [SerializeField]
     public GameObject productionFXPrefab;
+    [SerializeField]
+    public Sprite uiTileSprite;
 
     public bool creatingUnit;
 
     [SerializeField]
     Terrain terrain;
+
+    private ResourcesManager resourcesManager;
 
     private void Awake()
     {

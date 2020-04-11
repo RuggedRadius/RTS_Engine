@@ -34,6 +34,9 @@ public class Unit : MonoBehaviour, IMovable
     [SerializeField]
     public List<ResourceCost> resourceCosts;
 
+    [SerializeField]
+    public Sprite uiTileSprite;
+
     [Header("Prefab")]
     [SerializeField]
     public GameObject prefab;

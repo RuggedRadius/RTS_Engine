@@ -13,7 +13,7 @@ public class uiControlSelection : MonoBehaviour
     private Color selectionPane;
 
     bool isSelecting = false;
-    Vector3 mousePosition1;
+    Vector3 mouseOriginPosition;
 
 
     void Update()
@@ -22,7 +22,7 @@ public class uiControlSelection : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             isSelecting = true;
-            mousePosition1 = Input.mousePosition;
+            mouseOriginPosition = Input.mousePosition;
         }
         // If we let go of the left mouse button, end selection
         if (Input.GetMouseButtonUp(0))
@@ -34,7 +34,7 @@ public class uiControlSelection : MonoBehaviour
         if (isSelecting)
         {
             // Create a rect from both mouse positions
-            var rect = Utils.GetScreenRect(mousePosition1, Input.mousePosition);
+            var rect = Utils.GetScreenRect(mouseOriginPosition, Input.mousePosition);
             Utils.DrawScreenRect(rect, selectionPane);
             Utils.DrawScreenRectBorder(rect, 2, selectionBorder);
         }

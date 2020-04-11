@@ -5,6 +5,9 @@ using UnityEngine;
 public class Minimap3D : MonoBehaviour
 {
     [SerializeField]
+    private UI_Manager uiManager;
+
+    [SerializeField]
     private Camera cam3DMinimap;
 
     [SerializeField]
@@ -13,15 +16,15 @@ public class Minimap3D : MonoBehaviour
     [SerializeField]
     private float orbitSpeed;
 
-    private Vector3 mapCenter;
+    private Vector3 orbitPoint;
 
     void Start()
     {
-        mapCenter = new Vector3(terrain.terrainData.size.x / 2f, 0f, terrain.terrainData.size.z / 2f);
+        orbitPoint = Vector3.zero;
     }
 
     void Update()
     {
-        cam3DMinimap.transform.RotateAround(mapCenter, Vector3.up * orbitSpeed, Time.deltaTime);
+        cam3DMinimap.transform.RotateAround(orbitPoint, Vector3.up * orbitSpeed, Time.deltaTime);
     }
 }

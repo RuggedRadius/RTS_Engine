@@ -46,11 +46,14 @@ public class SelectionManager : MonoBehaviour
     private GameObject lastTargetLocationObject;
     private Ray targetRay;
 
-    [Header("Scripts")]
-    [SerializeField]
-    private uiSelection UISelectionScript;
-    [SerializeField]
-    private uiDisplaySingleUnit uiSingleUnitDisplay;
+    //[Header("Scripts")]
+    //[SerializeField]
+    private UI_Manager uiManager;
+
+    private void Start()
+    {
+        uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
+    }
 
     private void createTargetMarker(Vector3 position)
     {
@@ -85,7 +88,7 @@ public class SelectionManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             selectionStarted = false;
-            UISelectionScript.updateSelection();
+            uiManager.panelSelection.updateUISelectionDisplay();
         }
 
         if (selectionStarted)
@@ -94,7 +97,6 @@ public class SelectionManager : MonoBehaviour
             Camera camera = Camera.main;
             selectedUnits.Clear();
             selectedStructures.Clear();
-            //uiSingleUnitDisplay.clearActionsGrid();
 
             for (int i = 0; i < selectables.Count; i++)
             {
@@ -120,7 +122,11 @@ public class SelectionManager : MonoBehaviour
                     if (selectables[i].gameObject.GetComponent<Structure>() != null)
                     {
                         Debug.Log("Selecting structure");
-                        selectedStructures.Add(selectables[i].gameObject.GetComponent<Structure>());
+
+                        if (!selectedStructures.Contains(selectables[i].gameObject.GetComponent<Structure>()))
+                        {
+                            selectedStructures.Add(selectables[i].gameObject.GetComponent<Structure>());
+                        }
                     }
                 }
             }

@@ -58,6 +58,7 @@ MonoBehaviour:
     cost: 20
   - type: 1
     cost: 10
+  uiTileSprite: {fileID: 21300000, guid: 5a18125e8e631064d8781fc446505ce5, type: 3}
   prefab: {fileID: 3489631472464017579}
   moving: 0
   anim: {fileID: 2013614538452846075}

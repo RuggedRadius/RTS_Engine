@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Interfaces 
 {
+    public interface ISelectable
+    {
+        void addToPlayersSelected(GameObject go);
+    }
+
     public interface IUnitProducing
     {
         void createUnit(Unit unit);
