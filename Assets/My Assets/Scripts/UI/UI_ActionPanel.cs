@@ -61,7 +61,7 @@ public class UI_ActionPanel : MonoBehaviour
 
     public void clearCurrentUIActions()
     {
-        Debug.Log("Clearing actions");
+        //Debug.Log("Clearing actions");
         for (int i = 0; i < currentActionTiles.Count; i++)
         {
             Destroy(currentActionTiles[i]);

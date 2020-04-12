@@ -18,9 +18,11 @@ public class Unit : MonoBehaviour, IMovable
     [Range(5f, 20f)]
     public float unitSpeed;
     [SerializeField]
-    public float unitDamageBase;
+    public float unitBaseDamage;
     [SerializeField]
     public float unitBuildTime;
+    [SerializeField]
+    public float unitBaseArmour;
 
     [Serializable]
     public class ResourceCost
@@ -40,6 +42,7 @@ public class Unit : MonoBehaviour, IMovable
     [Header("Prefab")]
     [SerializeField]
     public GameObject prefab;
+    public Camera unitCam;
 
     [Header("State")]
     public bool moving;
@@ -56,6 +59,10 @@ public class Unit : MonoBehaviour, IMovable
     #endregion
 
     #region MonoBehaviour
+    private void Awake()
+    {
+        unitCam = GetComponentInChildren<Camera>();
+    }
     void Start()
     {
         agent = this.gameObject.AddComponent<NavMeshAgent>();

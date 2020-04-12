@@ -88,10 +88,18 @@ public class SelectionManager : MonoBehaviour
         uiManager.GetComponent<GraphicRaycaster>().Raycast(m_PointerEventData, results);
 
         //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
-        if (results[0].gameObject.layer == 5)
+        if (results.Count > 0)
         {
-            // Mouse is over UI
-            return true;
+            if (results[0].gameObject.layer == 5)
+            {
+                // Mouse is over UI
+                return true;
+            }
+            else
+            {
+                // Mouse is not over UI
+                return false;
+            }
         }
         else
         {
@@ -126,6 +134,8 @@ public class SelectionManager : MonoBehaviour
             {
                 // Mouse is over UI
                 selectionStarted = false;
+                uiManager.panelSelection.updateUITiles();
+
             }
             else
             {
@@ -158,14 +168,14 @@ public class SelectionManager : MonoBehaviour
                     {
                         selectedStructures.Clear();
 
-                        Debug.Log("Selecting unit");
+                        //Debug.Log("Selecting unit");
                         selectedUnits.Add(selectables[i].gameObject.GetComponent<Unit>());
                     }
 
                     // Structure
                     if (selectables[i].gameObject.GetComponent<Structure>() != null)
                     {
-                        Debug.Log("Selecting structure");
+                        //Debug.Log("Selecting structure");
                         selectedStructures.Add(selectables[i].gameObject.GetComponent<Structure>());
                     }
                 }

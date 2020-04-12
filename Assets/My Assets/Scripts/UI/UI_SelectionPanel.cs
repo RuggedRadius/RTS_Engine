@@ -96,7 +96,6 @@ public class UI_SelectionPanel : MonoBehaviour
                 multiple = false;
 
             // Display to UI
-            //GameObject go = createUIObject_Unit(unit, multiple);
             GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
 
             // Add to currently selected units
@@ -105,7 +104,13 @@ public class UI_SelectionPanel : MonoBehaviour
             // Populate actions UI panel
             if (!multiple)
             {
+                // Display Unit Procedure HERE...
+
+                // Actions
                 uiManager.panelAction.DisplayUnitActions(SelectionManager.selectedUnits[0]);
+
+                // Information
+                uiManager.panelInformation.DisplayInformation(unit);
             }
 
             // Populate information UI panel
@@ -124,6 +129,9 @@ public class UI_SelectionPanel : MonoBehaviour
 
         // Clear actions panel
         uiManager.panelAction.clearCurrentUIActions();
+
+        // Clear information panel
+        //uiManager.panelInformation.DestroyAllChildren();
     }
     #endregion
 }
