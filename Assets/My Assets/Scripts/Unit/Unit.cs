@@ -6,6 +6,15 @@ using UnityEngine.AI;
 using static Interfaces;
 
 [Serializable]
+public class ResourceCost
+{
+    [SerializeField]
+    public ResourceType type;
+    [SerializeField]
+    public int cost;
+}
+
+[Serializable]
 public class Unit : MonoBehaviour, IMovable
 {
     #region Properties
@@ -23,26 +32,26 @@ public class Unit : MonoBehaviour, IMovable
     public float unitBuildTime;
     [SerializeField]
     public float unitBaseArmour;
+    [SerializeField]
+    public float unitAcceleration;
+    [SerializeField]
+    public float unitRadius;
+    [SerializeField]
+    public float unitHeight;
+    [SerializeField]
+    public float unitStoppingDistance;
 
-    [Serializable]
-    public class ResourceCost
-    {
-        [SerializeField]
-        public ResourceType type;
-        [SerializeField]
-        public int cost;
-    }
+
+
 
     [SerializeField]
     public List<ResourceCost> resourceCosts;
 
+    [Header("Prefab Resources")]
+    [SerializeField]
+    public GameObject unitPrefab;
     [SerializeField]
     public Sprite uiTileSprite;
-
-    [Header("Prefab")]
-    [SerializeField]
-    public GameObject prefab;
-    public Camera unitCam;
 
     [Header("State")]
     public bool moving;
@@ -50,6 +59,7 @@ public class Unit : MonoBehaviour, IMovable
     [Header("References")]
     [SerializeField]
     private Animator anim;
+    public UnitLife unitLife;
 
     [Header("Settings")]
     [SerializeField]
@@ -61,22 +71,31 @@ public class Unit : MonoBehaviour, IMovable
     #region MonoBehaviour
     private void Awake()
     {
-        unitCam = GetComponentInChildren<Camera>();
+        unitLife = this.gameObject.GetComponent<UnitLife>();
     }
     void Start()
     {
-        agent = this.gameObject.AddComponent<NavMeshAgent>();
+        InitialiseNavMashAgent();
     }
 
     private void Update()
     {
         if (moving)
         {
-            // Check if close to destination
-            checkDestination();
+
         }
     }
     #endregion
+
+    private void InitialiseNavMashAgent()
+    {
+        agent = this.gameObject.GetComponent<NavMeshAgent>();
+        agent.speed = unitSpeed;
+        agent.acceleration = unitAcceleration;
+        agent.stoppingDistance = unitStoppingDistance;
+        agent.radius = unitRadius;
+        agent.height = unitHeight;
+    }
 
     #region IMovable interface
     public void move(Vector3 destination)
@@ -100,22 +119,16 @@ public class Unit : MonoBehaviour, IMovable
 
     private void updateAnimatorValues()
     {
-        anim.SetBool("Moving", moving);
-    }
-    private void checkDestination()
-    {
-        // If all 3 components of the vector 3 are withinn tolerance
-        if (
-            distanceToDestination(agent.destination).x < destinationTolerance &&
-            distanceToDestination(agent.destination).y < destinationTolerance &&
-            distanceToDestination(agent.destination).z < destinationTolerance
-            )
+        if (anim != null)
         {
-            // No more movings
-            agent.destination = agent.transform.position;
-            moving = false;
+            anim.SetBool("Moving", moving);
+        }
+        else
+        {
+            Debug.LogError("No animator set for unit: " + this.gameObject.name);
         }
     }
+
     private Vector3 distanceToDestination(Vector3 _destination)
     {
         return new Vector3( 

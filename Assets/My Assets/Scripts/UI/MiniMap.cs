@@ -26,7 +26,7 @@ public class MiniMap : MonoBehaviour
 
     private void clampZoom()
     {
-        minimapZoom = Mathf.Clamp(camMovement.camHeightCur, 2f, 30f);
+        minimapZoom = Mathf.Clamp(camMovement.camHeightCur, 2f, 200f);
     }
 
     private void getKeyboardInputs()

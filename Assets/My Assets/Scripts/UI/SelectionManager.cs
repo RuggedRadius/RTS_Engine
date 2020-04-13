@@ -115,8 +115,11 @@ public class SelectionManager : MonoBehaviour
                     {
                         selectedStructures.Clear();
 
-                        //Debug.Log("Selecting unit");
-                        selectedUnits.Add(selectables[i].gameObject.GetComponent<Unit>());
+                        if (selectedUnits.Count < 24)
+                        {
+                            //Debug.Log("Selecting unit");
+                            selectedUnits.Add(selectables[i].gameObject.GetComponent<Unit>());
+                        }
                     }
 
                     // Structure
@@ -189,6 +192,7 @@ public class SelectionManager : MonoBehaviour
 
     private void createTargetMarker(Vector3 position)
     {
+        print("Creating target marker at " + position);
         if (lastTargetLocationObject != null)
         {
             Destroy(lastTargetLocationObject);
@@ -196,6 +200,8 @@ public class SelectionManager : MonoBehaviour
         lastTargetLocationObject = Instantiate(targetLocationPrefab, this.transform);
         lastTargetLocation = new Vector3(lastTargetLocation.x, lastTargetLocation.y + 0.25f, lastTargetLocation.z);
         lastTargetLocationObject.transform.position = lastTargetLocation;
+        float camHeight = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().GetComponentInChildren<CameraMovement>().camHeightCur;
+        lastTargetLocationObject.transform.localScale = Vector3.one * (camHeight / 5f);
     }
     private void moveSelectedUnitsTo(Vector3 _destination)
     {

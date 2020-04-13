@@ -23,8 +23,6 @@ public class UI_SelectionPanel : MonoBehaviour
         if (SelectionManager.selectedStructures.Count == 1)
         {
             PopulateCurrentStructureQueue();
-
-
         }
     }
     #endregion
@@ -85,6 +83,14 @@ public class UI_SelectionPanel : MonoBehaviour
 
                 // Add to currently selected structures
                 currentSelection.Add(go);
+
+                // Add event handlers to button
+                go.GetComponent<Button>().onClick.AddListener(delegate () {
+                    SelectionManager.selectedUnits.Clear();
+                    SelectionManager.selectedStructures.Clear();
+                    SelectionManager.selectedStructures.Add(_structure);
+                    updateUITiles();
+                });
             }
         }
 
@@ -106,6 +112,13 @@ public class UI_SelectionPanel : MonoBehaviour
             // Display to UI
             GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
 
+            // Add event handlers to button
+            go.GetComponent<Button>().onClick.AddListener(delegate() {
+                SelectionManager.selectedUnits.Clear();
+                SelectionManager.selectedUnits.Add(unit);
+                updateUITiles();
+            });
+
             // Add to currently selected units
             currentSelection.Add(go);
 
@@ -118,7 +131,7 @@ public class UI_SelectionPanel : MonoBehaviour
                 uiManager.panelAction.DisplayUnitActions(SelectionManager.selectedUnits[0]);
 
                 // Information
-                uiManager.panelInformation.DisplayInformation(unit);
+                uiManager.panelInformation.UpdateTextInformation(unit);
             }
         }        
     }    

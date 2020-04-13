@@ -42,7 +42,7 @@ public class UI_Manager : MonoBehaviour
     {
         // Determine panel widths
         float heightTop = 30f;
-        float heightBottom = 150f;
+        float heightBottom = 200f;
         float heightMiddle = Screen.height - heightTop - heightBottom;
         
         // Apply sizes
@@ -83,9 +83,9 @@ public class UI_Manager : MonoBehaviour
         remainingWidth -= (4 * hlg.spacing);
 
         // Calculate panel widths based on remaining width
-        float informationPanelWidth = Mathf.Clamp(remainingWidth * 0.25f, 200f, parentWidth/2);
+        float informationPanelWidth = Mathf.Clamp(150f, 150f, parentWidth/2);
         float selectionPanelWidth = Mathf.Clamp(remainingWidth * 0.35f, 200f, parentWidth / 2);
-        float actionPanelWidth = Mathf.Clamp(remainingWidth * 0.35f, 150f, parentWidth / 2);
+        float actionPanelWidth = Mathf.Clamp(275f, 275f, parentWidth / 2);
 
         // Apply sizes to panels
         compMinimap.sizeDelta = new Vector2(minimapPanelWidth, compMinimap.sizeDelta.y);

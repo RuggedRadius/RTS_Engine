@@ -24,6 +24,8 @@ public class CameraMovement : MonoBehaviour
     private float camDistance;
     [SerializeField]
     private LayerMask heightGatherLayerMask;
+    [SerializeField]
+    private Camera camMinimap;
 
     [Header("Speeds")]
     [SerializeField]
@@ -119,8 +121,6 @@ public class CameraMovement : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction, Color.red, 3f);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            //Debug.Log("Hit " + hit.collider.gameObject.name + " at " + hit.point);
-
             // Hit terrain
             return hit.point.y;
         }
@@ -136,34 +136,6 @@ public class CameraMovement : MonoBehaviour
         focalX = focalPoint.transform.position.x;
         focalZ = focalPoint.transform.position.z;
 
-        //// Limit X-Axis
-        //if (focalPoint.transform.position.x < terrain.transform.position.x)
-        //{
-        //    Debug.Log("Below X Min");
-        //    focalX = terrain.transform.position.x; // X value up
-        //    focalZ = focalPoint.transform.position.z;
-        //}
-        //if (focalPoint.transform.position.x > terrain.transform.position.x + terrain.terrainData.size.x)
-        //{
-        //    Debug.Log("Above X Max");
-        //    focalX = terrain.transform.position.x + terrain.terrainData.size.x; // X value down
-        //    focalZ = focalPoint.transform.position.z;
-        //}
-
-        //// Limit Z-Axis
-        //if (focalPoint.transform.position.z < terrain.transform.position.z)
-        //{
-        //    Debug.Log("Below Z Min");
-        //    focalX = focalPoint.transform.position.x;
-        //    focalZ = terrain.transform.position.z; // Z Axis up
-        //}
-        //if (focalPoint.transform.position.z > terrain.transform.position.z + terrain.terrainData.size.z)
-        //{
-        //    Debug.Log("Above Z Max");
-        //    focalX = focalPoint.transform.position.x;
-        //    focalZ = terrain.transform.position.z + terrain.terrainData.size.z; // Z Axis Down
-        //}
-
         // Y-Axis
         focalY = getHeightFromPosition(focalPoint.transform.position);
         //focalY += 0.5f;
@@ -178,18 +150,6 @@ public class CameraMovement : MonoBehaviour
 
         // Determine camera position based on rotation, Set camera position
         Vector3 targetPosition = (Vector3.forward * camDistance) + (Vector3.up * (camHeightCur));
-
-        //// Get height at proposed position and make sure it is above terrain height
-        //float curTerrainHeight = getHeightFromPosition(cam.transform.position + targetPosition);
-        //float offset = 100;
-        //if (targetPosition.y <= curTerrainHeight)
-        //{
-        //    targetPosition = new Vector3(
-        //        targetPosition.x,
-        //        curTerrainHeight - offset,
-        //        targetPosition.z
-        //        );
-        //}
 
         // Smoothly apply new position
         Vector3 velocity = Vector3.zero;

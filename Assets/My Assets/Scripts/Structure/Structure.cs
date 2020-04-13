@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using static Interfaces;
 using static Unit;
 
@@ -21,6 +22,10 @@ public class Structure : MonoBehaviour, IUnitProducing
 
     [SerializeField]
     public Queue<Unit> productionQueue;
+    public float currentProductionProgress;
+
+    [SerializeField]
+    private Text productionText;
 
 
 
@@ -53,7 +58,17 @@ public class Structure : MonoBehaviour, IUnitProducing
 
     public void createUnit(Unit unit)
     {
-        print("Attempting to create " + unit.unitName);
+        if (productionQueue.Count < 24)
+        {
+            // If not returned by now, resources are available
+            productionQueue.Enqueue(unit);
+        }
+        else
+        {
+            print("Queue is full!");
+            return;
+        }
+
         foreach (ResourceCost rc in unit.resourceCosts)
         {
             // Determine amounts
@@ -73,14 +88,12 @@ public class Structure : MonoBehaviour, IUnitProducing
                 resourcesManager.DecreaseResource(rc.type, rc.cost);
             }
         }
-
-        // If not returned by now, resources are available
-        productionQueue.Enqueue(unit);
     }
 
     private IEnumerator unitCreation(Unit unit)
     {
         creatingUnit = true;
+        currentProductionProgress = 0f;
 
         // Start FX
         GameObject fx = Instantiate(productionFXPrefab);
@@ -88,33 +101,28 @@ public class Structure : MonoBehaviour, IUnitProducing
         fx.transform.localPosition = Vector3.zero;
         fx.transform.localScale = Vector3.one * 10f;
 
-        // UI Stuff
-        //...
-
         // Build time wait
-        yield return new WaitForSeconds(unit.unitBuildTime);
+        float timer = 0f;
+        while (timer <= unit.unitBuildTime)
+        {
+            productionText.transform.parent.LookAt(Camera.main.transform);
+            currentProductionProgress = (timer / unit.unitBuildTime) * 100f;
+            productionText.text = (int)currentProductionProgress + "%";
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        productionText.text = "";
 
-        // UI Stuff
-        //...
-
-        // Spanw Unit
-        GameObject newUnit = Instantiate(unit.prefab);
+        // Spawn Unit
+        GameObject newUnit = Instantiate(unit.unitPrefab);
         newUnit.transform.parent = this.transform.root.Find("Units");
 
         // Position unit
-        Vector3 positionRandomisation = new Vector3(UnityEngine.Random.Range(-3f, 3f), 0f, UnityEngine.Random.Range(-3f, 3f));
-        Vector3 finalPosition = this.transform.position + positionRandomisation;
-        //NavMesh.sa
-        bool success = NavMesh.SamplePosition(finalPosition, out NavMeshHit hit, 1000, 8);
-        if (success)
-        {
-            newUnit.transform.position = hit.position;
-        }
-        else
-        {
-            newUnit.transform.position = finalPosition;
-
-        }
+        Vector3 finalPosition = this.transform.position;
+        finalPosition += -transform.forward * 6;
+        newUnit.transform.position = finalPosition;
+        newUnit.GetComponent<NavMeshAgent>().enabled = false;
+        newUnit.GetComponent<NavMeshAgent>().enabled = true;
 
         // Stop FX
         Destroy(fx);

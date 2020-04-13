@@ -9,15 +9,23 @@ public class UI_InformationPanel : MonoBehaviour
 
     [Header("Components")]
     [SerializeField]
-    private Text nameLabel;
+    private Text valueName;
     [SerializeField]
-    private Text valueAttack;
+    private Text value1;
     [SerializeField]
-    private Text valueArmour;
+    private Text value2;
     [SerializeField]
-    private Text valueSpeed;
+    private Text value3;
+
+    [Header("Labels")]
     [SerializeField]
-    private Camera portraitCamera;
+    private Text label1;
+    [SerializeField]
+    private Text label2;
+    [SerializeField]
+    private Text label3;
+
+
 
     void Start()
     {
@@ -26,44 +34,38 @@ public class UI_InformationPanel : MonoBehaviour
 
     public void ClearInformationPanel()
     {
-        nameLabel.text = string.Empty;
-        valueAttack.text = string.Empty;
-        valueArmour.text = string.Empty;
-        valueSpeed.text = string.Empty;
+        valueName.text = string.Empty;
+        value1.text = string.Empty;
+        value2.text = string.Empty;
+        value3.text = string.Empty;
+
+        label1.text = string.Empty;
+        label2.text = string.Empty;
+        label3.text = string.Empty;
+    }
+
+    private void SetPanelForUnit()
+    {
+        label1.text = "Attack";
+        label2.text = "Armour";
+        label3.text = "Speed";
     }
 
 
     public void UpdateTextInformation(Unit unit)
     {
-        nameLabel.text = unit.unitName;
-        valueAttack.text = unit.unitBaseDamage.ToString();
-        valueArmour.text = unit.unitBaseArmour.ToString();
-        valueSpeed.text = unit.unitSpeed.ToString();
+        SetPanelForUnit();
+
+        valueName.text = unit.unitName;
+        value1.text = unit.unitBaseDamage.ToString();
+        value2.text = unit.unitBaseArmour.ToString();
+        value3.text = unit.unitSpeed.ToString();
     }
     public void UpdateTextInformation(Structure structure)
     {
-        nameLabel.text = structure.structureName;
-        valueAttack.text = "Hmm";
-        valueArmour.text = "Hmm";
-        valueSpeed.text = "Hmm";
-    }
-
-    public void DisplayInformation(Unit unit)
-    {
-        // Update info
-        UpdateTextInformation(unit);
-    }
-    public void DisplayInformation(Structure structure)
-    {
-        // Update info
-        UpdateTextInformation(structure);
-
-        // Position camera
-        portraitCamera.transform.position = new Vector3(
-            structure.gameObject.transform.position.x,
-            structure.gameObject.transform.position.z + 1f,
-            structure.gameObject.transform.position.x - 5f
-            );
-        portraitCamera.transform.LookAt(structure.transform);
+        valueName.text = structure.structureName;
+        value1.text = "Hmm";
+        value2.text = "Hmm";
+        value3.text = "Hmm";
     }
 }
