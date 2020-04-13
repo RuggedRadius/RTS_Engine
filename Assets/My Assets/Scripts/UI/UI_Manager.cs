@@ -28,12 +28,14 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     public UI_ActionPanel panelAction;
 
+    public List<GameObject> currentSelection;
+
     void Start()
     {
+        currentSelection = new List<GameObject>();
+
         sizeMainPanels();
         sizeInteractionSubPanels();
-
-        //panelBottom.
     }
 
     public void sizeMainPanels()
@@ -98,6 +100,46 @@ public class UI_Manager : MonoBehaviour
         gridSize -= glg.padding.top;
         gridSize -= glg.padding.right;
         glg.cellSize = new Vector2(gridSize, gridSize);
+    }
+
+    public void ClearUIPanels()
+    {
+        panelSelection.ClearSelectionPanel();
+        panelAction.ClearActionsPanel();
+        panelInformation.ClearInformationPanel();
+    }
+
+    public void UpdateUI()
+    {
+        // clear ui here
+        ClearUIPanels();
+
+        if (currentSelection.Count < 1)
+            return;
+
+
+        // Selection
+        panelSelection.updateUITiles();
+
+        if (currentSelection.Count == 1)
+        {
+            if (currentSelection[0].GetComponent<Unit>() != null)
+            {
+                // Action
+                panelAction.DisplayUnitActions(currentSelection[0].GetComponent<Unit>());
+
+                // Information
+                panelInformation.UpdateTextInformation(currentSelection[0].GetComponent<Unit>());
+            }
+            else if (currentSelection[0].GetComponent<Structure>() != null)
+            {
+                // Action
+                panelAction.DisplayStructureActions(currentSelection[0].GetComponent<Structure>());
+
+                // Information
+                panelInformation.UpdateTextInformation(currentSelection[0].GetComponent<Structure>());
+            }
+        }
     }
 
 

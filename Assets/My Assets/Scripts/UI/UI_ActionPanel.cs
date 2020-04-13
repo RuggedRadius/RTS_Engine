@@ -21,13 +21,13 @@ public class UI_ActionPanel : MonoBehaviour
 
     public void DisplayUnitActions(Unit unit)
     {
-        clearCurrentUIActions();
+        ClearActionsPanel();
 
     }
 
     public void DisplayStructureActions(Structure structure)
     {
-        clearCurrentUIActions();
+        ClearActionsPanel();
 
         // Iterate through all functions of structure
         if (structure is IAttacking)
@@ -59,7 +59,7 @@ public class UI_ActionPanel : MonoBehaviour
         }
     }
 
-    public void clearCurrentUIActions()
+    public void ClearActionsPanel()
     {
         //Debug.Log("Clearing actions");
         for (int i = 0; i < currentActionTiles.Count; i++)

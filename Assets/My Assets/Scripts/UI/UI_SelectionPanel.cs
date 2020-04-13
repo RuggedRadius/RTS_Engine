@@ -9,6 +9,7 @@ public class UI_SelectionPanel : MonoBehaviour
     #region Properties
     private UI_Manager uiManager;
     public List<GameObject> currentSelection;
+    public List<GameObject> currentStructureQueue;
     #endregion
 
     #region MonoBehaviour
@@ -17,21 +18,54 @@ public class UI_SelectionPanel : MonoBehaviour
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
         currentSelection = new List<GameObject>();
     }
+    private void Update()
+    {
+        if (SelectionManager.selectedStructures.Count == 1)
+        {
+            PopulateCurrentStructureQueue();
+
+
+        }
+    }
     #endregion
 
     #region UI Methods
     public void updateUITiles()
     {
         // Clear the UI selections
-        clearCurrentUISelections();
+        ClearSelectionPanel();
 
         // Prioritise unit selection over buildings
         if (SelectionManager.selectedUnits.Count > 0)
+        {
             DisplayUnits();
-
-        // Then buildings
-        if (SelectionManager.selectedStructures.Count > 0)
+        }
+        else if (SelectionManager.selectedStructures.Count > 0)
+        {
+            // Then buildings
             DisplayStructures();
+        }
+    }
+
+    public void PopulateCurrentStructureQueue()
+    {
+        ClearCurrentStructureQueue();
+
+        foreach (Unit unit in SelectionManager.selectedStructures[0].productionQueue)
+        {
+            // Display to UI
+            GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
+            currentStructureQueue.Add(go);
+        }
+    }
+
+    public void ClearCurrentStructureQueue()
+    {
+        // Clear selection panel
+        for (int i = 0; i < currentStructureQueue.Count; i++)
+        {
+            Destroy(currentStructureQueue[i]);
+        }
     }
 
     private void DisplayStructures()
@@ -40,43 +74,17 @@ public class UI_SelectionPanel : MonoBehaviour
 
         if (SelectionManager.selectedStructures.Count == 1)
         {
-            foreach (Unit unit in SelectionManager.selectedStructures[0].productionQueue)
-            {
-                // Display to UI
-                GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
-
-                // Populate information UI panel
-                // ...
-            }
-
-            // Populate actions UI panel
-            uiManager.panelAction.DisplayStructureActions(SelectionManager.selectedStructures[0]);
+            PopulateCurrentStructureQueue();
         }
         else
         {
             foreach (Structure _structure in SelectionManager.selectedStructures)
-            {
-                // Determine if single or multiple display
-                bool multiple;
-                if (SelectionManager.selectedStructures.Count > 1)
-                    multiple = true;
-                else
-                    multiple = false;
-
+            {    
                 // Display to UI
                 GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(_structure);
 
                 // Add to currently selected structures
                 currentSelection.Add(go);
-
-                // Populate actions UI panel
-                if (!multiple)
-                {
-                    uiManager.panelAction.DisplayStructureActions(SelectionManager.selectedStructures[0]);
-                }
-
-                // Populate information UI panel
-                // ...
             }
         }
 
@@ -112,14 +120,10 @@ public class UI_SelectionPanel : MonoBehaviour
                 // Information
                 uiManager.panelInformation.DisplayInformation(unit);
             }
-
-            // Populate information UI panel
-            // ...
-        }
-        
+        }        
     }    
 
-    private void clearCurrentUISelections()
+    public void ClearSelectionPanel()
     {
         // Clear selection panel
         for (int i = 0; i < currentSelection.Count; i++)
@@ -127,11 +131,7 @@ public class UI_SelectionPanel : MonoBehaviour
             Destroy(currentSelection[i]);
         }
 
-        // Clear actions panel
-        uiManager.panelAction.clearCurrentUIActions();
-
-        // Clear information panel
-        //uiManager.panelInformation.DestroyAllChildren();
+        ClearCurrentStructureQueue();
     }
     #endregion
 }

@@ -53,66 +53,8 @@ public class SelectionManager : MonoBehaviour
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
     }
-
-    private void createTargetMarker(Vector3 position)
-    {
-        if (lastTargetLocationObject != null)
-        {
-            Destroy(lastTargetLocationObject);
-        }
-        lastTargetLocationObject = Instantiate(targetLocationPrefab, this.transform);
-        lastTargetLocation = new Vector3(lastTargetLocation.x, lastTargetLocation.y + 0.25f, lastTargetLocation.z);
-        lastTargetLocationObject.transform.position = lastTargetLocation;
-    }
-
-    private void moveSelectedUnitsTo(Vector3 _destination)
-    {
-        foreach (Unit unit in selectedUnits)
-        {
-            unit.move(_destination);
-        }
-    }
-
-    private bool isMouseOverUI()
-    {
-        //Set up the new Pointer Event
-        PointerEventData m_PointerEventData = new PointerEventData(uiManager.GetComponent<EventSystem>());
-
-        //Set the Pointer Event Position to that of the mouse position
-        m_PointerEventData.position = Input.mousePosition;
-
-        //Create a list of Raycast Results
-        List<RaycastResult> results = new List<RaycastResult>();
-
-        //Raycast using the Graphics Raycaster and mouse click position
-        uiManager.GetComponent<GraphicRaycaster>().Raycast(m_PointerEventData, results);
-
-        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
-        if (results.Count > 0)
-        {
-            if (results[0].gameObject.layer == 5)
-            {
-                // Mouse is over UI
-                return true;
-            }
-            else
-            {
-                // Mouse is not over UI
-                return false;
-            }
-        }
-        else
-        {
-            // Mouse is not over UI
-            return false;
-        }
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        
-
         // Begin selection
         if (Input.GetMouseButtonDown(0))
         {
@@ -130,19 +72,24 @@ public class SelectionManager : MonoBehaviour
         // End selection
         if (Input.GetMouseButtonUp(0))
         {
-            if (isMouseOverUI())
-            {
-                // Mouse is over UI
-                selectionStarted = false;
-                uiManager.panelSelection.updateUITiles();
+            selectionStarted = false;
 
+            uiManager.currentSelection.Clear();
+            if (selectedUnits.Count > 0)
+            {
+                foreach (Unit unit in selectedUnits)
+                {
+                    uiManager.currentSelection.Add(unit.gameObject);
+                }
             }
             else
             {
-                // Mouse is not over UI
-                selectionStarted = false;
-                uiManager.panelSelection.updateUITiles();
+                foreach (Structure structure in selectedStructures)
+                {
+                    uiManager.currentSelection.Add(structure.gameObject);
+                }
             }
+            uiManager.UpdateUI();
         }
 
         if (selectionStarted)
@@ -207,7 +154,6 @@ public class SelectionManager : MonoBehaviour
             }
         }
     }
-
     void OnGUI()
     {
         if (selectionStarted)
@@ -241,6 +187,58 @@ public class SelectionManager : MonoBehaviour
 
     }
 
+    private void createTargetMarker(Vector3 position)
+    {
+        if (lastTargetLocationObject != null)
+        {
+            Destroy(lastTargetLocationObject);
+        }
+        lastTargetLocationObject = Instantiate(targetLocationPrefab, this.transform);
+        lastTargetLocation = new Vector3(lastTargetLocation.x, lastTargetLocation.y + 0.25f, lastTargetLocation.z);
+        lastTargetLocationObject.transform.position = lastTargetLocation;
+    }
+    private void moveSelectedUnitsTo(Vector3 _destination)
+    {
+        foreach (Unit unit in selectedUnits)
+        {
+            unit.move(_destination);
+        }
+    }
+    private bool isMouseOverUI()
+    {
+        //Set up the new Pointer Event
+        PointerEventData m_PointerEventData = new PointerEventData(uiManager.GetComponent<EventSystem>());
+
+        //Set the Pointer Event Position to that of the mouse position
+        m_PointerEventData.position = Input.mousePosition;
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        //Raycast using the Graphics Raycaster and mouse click position
+        uiManager.GetComponent<GraphicRaycaster>().Raycast(m_PointerEventData, results);
+
+        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+        if (results.Count > 0)
+        {
+            if (results[0].gameObject.layer == 5)
+            {
+                // Mouse is over UI
+                return true;
+            }
+            else
+            {
+                // Mouse is not over UI
+                return false;
+            }
+        }
+        else
+        {
+            // Mouse is not over UI
+            return false;
+        }
+    }
+
     void DrawScreenRectBorder(Rect rect, float thickness, Color color)
     {
         // Top
@@ -252,14 +250,12 @@ public class SelectionManager : MonoBehaviour
         // Bottom
         DrawBorderRect(new Rect(rect.xMin, rect.yMax - thickness, rect.width, thickness), color);
     }
-
     void DrawBorderRect(Rect rect, Color color)
     {
         GUI.color = color;
         GUI.DrawTexture(rect, borderTexture);
         GUI.color = Color.white;
     }
-
     Rect GetScreenRect(Vector3 screenPosition1, Vector3 screenPosition2)
     {
         // Move origin from bottom left to top left
@@ -271,7 +267,6 @@ public class SelectionManager : MonoBehaviour
         // Create Rect
         return Rect.MinMaxRect(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
     }
-
     Bounds GetViewportBounds(Camera camera, Vector3 screenPosition1, Vector3 screenPosition2)
     {
         Vector3 v1 = camera.ScreenToViewportPoint(screenPosition1);
@@ -285,7 +280,6 @@ public class SelectionManager : MonoBehaviour
         bounds.SetMinMax(min, max);
         return bounds;
     }
-
     void DrawSelectionIndicator(Camera camera, Bounds bounds)
     {
         Vector3 boundPoint1 = bounds.min;

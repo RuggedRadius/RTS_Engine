@@ -19,50 +19,28 @@ public class UI_InformationPanel : MonoBehaviour
     [SerializeField]
     private Camera portraitCamera;
 
-    private GameObject currentSelection;
-
     void Start()
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
     }
 
-    private void Update()
+    public void ClearInformationPanel()
     {
-        //if (currentSelection != null)
-        //{
-        //    PositionCameraToCurrentSelection();
-        //}
-        //else
-        //{
-        //    portraitCamera.enabled = false;
-        //}
+        nameLabel.text = string.Empty;
+        valueAttack.text = string.Empty;
+        valueArmour.text = string.Empty;
+        valueSpeed.text = string.Empty;
     }
 
-    private void PositionCameraToCurrentSelection()
-    {
-        // Check if unit or structure and adjust position
-        // ...
 
-        
-
-        //portraitCamera.enabled = true;
-
-        //// Position camera
-        //portraitCamera.transform.position = currentSelection.transform.position;
-        //portraitCamera.transform.rotation = currentSelection.transform.rotation;
-        //portraitCamera.transform.position += (3 * transform.forward);
-        //portraitCamera.transform.position += (1.5f * transform.up);
-        //portraitCamera.transform.LookAt(currentSelection.transform);
-    }
-
-    private void UpdateTextInformation(Unit unit)
+    public void UpdateTextInformation(Unit unit)
     {
         nameLabel.text = unit.unitName;
         valueAttack.text = unit.unitBaseDamage.ToString();
         valueArmour.text = unit.unitBaseArmour.ToString();
         valueSpeed.text = unit.unitSpeed.ToString();
     }
-    private void UpdateTextInformation(Structure structure)
+    public void UpdateTextInformation(Structure structure)
     {
         nameLabel.text = structure.structureName;
         valueAttack.text = "Hmm";
@@ -74,11 +52,6 @@ public class UI_InformationPanel : MonoBehaviour
     {
         // Update info
         UpdateTextInformation(unit);
-
-        portraitCamera = unit.unitCam;
-
-        // Update current selection
-        currentSelection = unit.gameObject;
     }
     public void DisplayInformation(Structure structure)
     {
@@ -92,8 +65,5 @@ public class UI_InformationPanel : MonoBehaviour
             structure.gameObject.transform.position.x - 5f
             );
         portraitCamera.transform.LookAt(structure.transform);
-
-        // Update current selection
-        currentSelection = structure.gameObject;
     }
 }
