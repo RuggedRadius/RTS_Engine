@@ -82,6 +82,7 @@
     <Compile Include="Assets\LineParticle\Scripts\Test.cs" />
     <Compile Include="Assets\My Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\My Assets\Scripts\Input\CameraMovement.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Input\HotGroups.cs" />
     <Compile Include="Assets\My Assets\Scripts\Interfaces.cs" />
     <Compile Include="Assets\My Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\My Assets\Scripts\ResourcesManager.cs" />
