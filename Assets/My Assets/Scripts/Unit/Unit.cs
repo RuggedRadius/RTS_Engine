@@ -14,6 +14,14 @@ public class ResourceCost
     public int cost;
 }
 
+public enum UnitType
+{
+    GroundMelee,
+    GroundRanged,
+    Air,
+    AirTransport
+}
+
 [Serializable]
 public class Unit : MonoBehaviour, IMovable
 {
@@ -21,6 +29,8 @@ public class Unit : MonoBehaviour, IMovable
     [Header("Unit Information")]
     [SerializeField]
     public string unitName;
+    public UnitType unitType;
+    public Team team;
 
     [Header("Stats")]
     [SerializeField]
@@ -65,17 +75,20 @@ public class Unit : MonoBehaviour, IMovable
     [SerializeField]
     private float destinationTolerance;
     
-    private NavMeshAgent agent;
+    public NavMeshAgent agent;
     #endregion
 
     #region MonoBehaviour
     private void Awake()
     {
+        InitialiseNavMashAgent();
         unitLife = this.gameObject.GetComponent<UnitLife>();
     }
-    void Start()
+
+    private void Start()
     {
-        InitialiseNavMashAgent();
+        team = this.transform.root.GetComponent<TeamScript>().team;
+
     }
 
     private void Update()
@@ -101,7 +114,27 @@ public class Unit : MonoBehaviour, IMovable
     public void move(Vector3 destination)
     {
         moving = true;
-        agent.SetDestination(destination);
+
+        switch (unitType)
+        {
+            case UnitType.GroundMelee:
+                this.GetComponent<Unit_GroundMelee>().move(destination);
+                break;
+
+            case UnitType.Air:
+                this.GetComponent<Unit_Air>().move(destination);
+                break;
+
+            case UnitType.GroundRanged:
+                this.GetComponent<Unit_GroundRanged>().move(destination);
+                break;
+
+            case UnitType.AirTransport:
+                //this.GetComponent<Unit>().move(destination);
+                break;
+        }
+
+        //agent.SetDestination(destination);
 
         // Update animator values
         updateAnimatorValues();
@@ -117,7 +150,7 @@ public class Unit : MonoBehaviour, IMovable
     }
     #endregion
 
-    private void updateAnimatorValues()
+    public void updateAnimatorValues()
     {
         if (anim != null)
         {
@@ -125,7 +158,7 @@ public class Unit : MonoBehaviour, IMovable
         }
         else
         {
-            Debug.LogError("No animator set for unit: " + this.gameObject.name);
+            Debug.LogWarning("No animator set for unit: " + this.gameObject.name);
         }
     }
 

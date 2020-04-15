@@ -87,24 +87,16 @@ public class CameraMovement : MonoBehaviour
         return Mathf.Lerp(zoomSpeedMin, zoomSpeedMax, camHeightCur / camHeightMax);
     }
 
+
+    float inputX;
+    float inputY;
     private void getKeyboardInputs()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            focalPoint.transform.position += -focalPoint.transform.forward * keyboardMovementSpeed;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            focalPoint.transform.position += focalPoint.transform.right * keyboardMovementSpeed;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            focalPoint.transform.position += focalPoint.transform.forward * keyboardMovementSpeed;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            focalPoint.transform.position += -focalPoint.transform.right * keyboardMovementSpeed;
-        }
+        inputX = Input.GetAxis("Horizontal");
+        inputY = Input.GetAxis("Vertical");
+        focalPoint.transform.position += -inputY * focalPoint.transform.forward * keyboardMovementSpeed;
+        focalPoint.transform.position += -inputX * focalPoint.transform.right * keyboardMovementSpeed;
+
         if (Input.GetKey(KeyCode.Q))
         {
             focalPoint.transform.eulerAngles += Vector3.up * camRotationSpeed;
@@ -118,18 +110,23 @@ public class CameraMovement : MonoBehaviour
     {
         Vector3 modifiedPosition = new Vector3(position.x, 1000f, position.z);
         Ray ray = new Ray(modifiedPosition, -transform.up);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red, 3f);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        Debug.DrawRay(ray.origin, ray.direction, Color.red, 3f, false);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 10000f, heightGatherLayerMask, QueryTriggerInteraction.Ignore))
         {
             // Hit terrain
             return hit.point.y;
         }
         else
         {
-            Debug.LogError("No terrain below!");
-            return -100f;
+            Debug.LogWarning("No terrain below!");
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                print("Hit " + hit.collider.name + " instead on layer " + hit.collider.gameObject.layer);
+            }
+            return -0f;
         }
-               
     }
     private void confineFocalPointToTerrainBounds()
     {
@@ -137,7 +134,8 @@ public class CameraMovement : MonoBehaviour
         focalZ = focalPoint.transform.position.z;
 
         // Y-Axis
-        focalY = getHeightFromPosition(focalPoint.transform.position);
+        //focalY = getHeightFromPosition(focalPoint.transform.position);
+        focalY = 0;
         //focalY += 0.5f;
 
         // Set focal point position

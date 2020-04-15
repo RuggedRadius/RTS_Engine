@@ -80,9 +80,6 @@
     <Compile Include="Assets\LineParticle\Scripts\CameraRotate.cs" />
     <Compile Include="Assets\LineParticle\Scripts\LineParticle.cs" />
     <Compile Include="Assets\LineParticle\Scripts\Test.cs" />
-    <Compile Include="Assets\My Assets\Scripts\DynamicQuadGrid\PlaneSurface.cs" />
-    <Compile Include="Assets\My Assets\Scripts\DynamicQuadGrid\Surface.cs" />
-    <Compile Include="Assets\My Assets\Scripts\DynamicQuadGrid\TerrainGridOverlay.cs" />
     <Compile Include="Assets\My Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\My Assets\Scripts\Input\CameraMovement.cs" />
     <Compile Include="Assets\My Assets\Scripts\Interfaces.cs" />
@@ -90,6 +87,12 @@
     <Compile Include="Assets\My Assets\Scripts\ResourcesManager.cs" />
     <Compile Include="Assets\My Assets\Scripts\SelfDestruct.cs" />
     <Compile Include="Assets\My Assets\Scripts\Structure\Structure.cs" />
+    <Compile Include="Assets\My Assets\Scripts\TeamManager.cs" />
+    <Compile Include="Assets\My Assets\Scripts\TeamScript.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Terrain\DynamicQuadGrid\PlaneSurface.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Terrain\DynamicQuadGrid\Surface.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Terrain\DynamicQuadGrid\TerrainGridOverlay.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Terrain\TerrainSettings.cs" />
     <Compile Include="Assets\My Assets\Scripts\TestCamera.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\MiniMap.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\Minimap3D.cs" />
@@ -100,13 +103,19 @@
     <Compile Include="Assets\My Assets\Scripts\UI\UI_Manager.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\UI_Panel.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\UI_SelectionPanel.cs" />
+    <Compile Include="Assets\My Assets\Scripts\UI\UI_TileManager.cs" />
     <Compile Include="Assets\My Assets\Scripts\UI\UI_Utilities.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\Action.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\LifeBarDisplay.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\Selectable.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\Unit.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Unit\UnitAttackRange.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Unit\UnitColour.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\UnitFlight.cs" />
     <Compile Include="Assets\My Assets\Scripts\Unit\UnitLife.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Unit\Unit_Air.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Unit\Unit_GroundMelee.cs" />
+    <Compile Include="Assets\My Assets\Scripts\Unit\Unit_GroundRanged.cs" />
     <Compile Include="Assets\My Assets\Scripts\UnitDictionary.cs" />
     <Compile Include="Assets\My Assets\Scripts\World\Sun.cs" />
     <None Include="Assets\Shaders\SmudgeHeight.shader" />
@@ -129,31 +138,31 @@
     <None Include="Assets\Five Seamless Tileable Ground Textures\read me.txt" />
     <None Include="Assets\Shaders\SlopeFlatten.shader" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Users/Ben/Documents/GitHub/RTS_Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/Users/Ben/Documents/Unity/Projects/RTS/RTS_Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

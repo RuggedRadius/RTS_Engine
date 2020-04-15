@@ -20,9 +20,12 @@ public class UI_SelectionPanel : MonoBehaviour
     }
     private void Update()
     {
-        if (SelectionManager.selectedStructures.Count == 1)
+        if (SelectionManager.currentSelection.Count == 1)
         {
-            PopulateCurrentStructureQueue();
+            if (SelectionManager.currentSelection[0].GetComponent<Structure>() != null)
+            {
+                PopulateCurrentStructureQueue();
+            }
         }
     }
     #endregion
@@ -30,18 +33,31 @@ public class UI_SelectionPanel : MonoBehaviour
     #region UI Methods
     public void updateUITiles()
     {
+        //print("Updating UI Tiles");
         // Clear the UI selections
         ClearSelectionPanel();
 
         // Prioritise unit selection over buildings
-        if (SelectionManager.selectedUnits.Count > 0)
+        if (SelectionManager.currentSelection.Count > 0)
         {
-            DisplayUnits();
+            if (SelectionManager.currentSelection[0].gameObject.GetComponent<Unit>() != null)
+            {
+                //print("Displaying units");
+                DisplayUnits();
+            }
+            else if (SelectionManager.currentSelection[0].gameObject.GetComponent<Structure>() != null)
+            {
+                //print("Displaying structures");
+                DisplayStructures();
+            }
+            else
+            {
+                Debug.LogError("No valid current selection");
+            }
         }
-        else if (SelectionManager.selectedStructures.Count > 0)
+        else
         {
-            // Then buildings
-            DisplayStructures();
+            Debug.LogError("No selection");
         }
     }
 
@@ -49,14 +65,13 @@ public class UI_SelectionPanel : MonoBehaviour
     {
         ClearCurrentStructureQueue();
 
-        foreach (Unit unit in SelectionManager.selectedStructures[0].productionQueue)
+        foreach (Unit unit in SelectionManager.currentSelection[0].productionQueue)
         {
             // Display to UI
             GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
             currentStructureQueue.Add(go);
         }
     }
-
     public void ClearCurrentStructureQueue()
     {
         // Clear selection panel
@@ -67,71 +82,76 @@ public class UI_SelectionPanel : MonoBehaviour
     }
 
     private void DisplayStructures()
-    {
+                                            {
         currentSelection.Clear();
 
-        if (SelectionManager.selectedStructures.Count == 1)
+        if (SelectionManager.currentSelection.Count == 1)
         {
             PopulateCurrentStructureQueue();
         }
         else
         {
-            foreach (Structure _structure in SelectionManager.selectedStructures)
+            foreach (dynamic _structure in SelectionManager.currentSelection)
             {    
-                // Display to UI
-                GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(_structure);
+                if (_structure.GetComponent<Structure>() != null)
+                {
+                    // Display to UI
+                    GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(_structure);
 
-                // Add to currently selected structures
-                currentSelection.Add(go);
+                    // Add to currently selected structures
+                    currentSelection.Add(go);
 
-                // Add event handlers to button
-                go.GetComponent<Button>().onClick.AddListener(delegate () {
-                    SelectionManager.selectedUnits.Clear();
-                    SelectionManager.selectedStructures.Clear();
-                    SelectionManager.selectedStructures.Add(_structure);
-                    updateUITiles();
-                });
+                    // Add event handlers to button
+                    go.GetComponent<Button>().onClick.AddListener(delegate () {
+                        SelectionManager.currentSelection.Clear();
+                        SelectionManager.currentSelection.Clear();
+                        SelectionManager.currentSelection.Add((Structure)_structure);
+                        updateUITiles();
+                    });
+                }
             }
         }
-
-
     }
     private void DisplayUnits()
     {
         currentSelection.Clear();
 
-        foreach (Unit unit in SelectionManager.selectedUnits)
+        foreach (dynamic unit in SelectionManager.currentSelection)
         {
-            // Determine if single or multiple display
-            bool multiple;
-            if (SelectionManager.selectedUnits.Count > 1)
-                multiple = true;
-            else
-                multiple = false;
-
-            // Display to UI
-            GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
-
-            // Add event handlers to button
-            go.GetComponent<Button>().onClick.AddListener(delegate() {
-                SelectionManager.selectedUnits.Clear();
-                SelectionManager.selectedUnits.Add(unit);
-                updateUITiles();
-            });
-
-            // Add to currently selected units
-            currentSelection.Add(go);
-
-            // Populate actions UI panel
-            if (!multiple)
+            if (unit.GetComponent<Unit>() != null)
             {
-                // Display Unit Procedure HERE...
+                // Determine if single or multiple display
+                bool multiple;
+                if (SelectionManager.currentSelection.Count > 1)
+                    multiple = true;
+                else
+                    multiple = false;
 
-                // Actions
-                uiManager.panelAction.DisplayUnitActions(SelectionManager.selectedUnits[0]);
+                // Display to UI
+                GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile((Unit)unit.GetComponent<Unit>());
 
-                // Information
-                uiManager.panelInformation.UpdateTextInformation(unit);
+                // Add event handlers to button
+                go.GetComponent<Button>().onClick.AddListener(delegate ()
+                {
+                    SelectionManager.currentSelection.Clear();
+                    SelectionManager.currentSelection.Add(unit);
+                    updateUITiles();
+                });
+
+                // Add to currently selected units
+                currentSelection.Add(go);
+
+                // Populate actions UI panel
+                if (!multiple)
+                {
+                    // Display Unit Procedure HERE...
+
+                    // Actions
+                    uiManager.panelAction.DisplayUnitActions((Unit)SelectionManager.currentSelection[0].GetComponent<Unit>());
+
+                    // Information
+                    uiManager.panelInformation.UpdateTextInformation((Unit)unit.GetComponent<Unit>());
+                }
             }
         }        
     }    

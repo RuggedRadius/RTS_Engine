@@ -5,7 +5,7 @@ using UnityEngine;
 public class TestCamera : MonoBehaviour
 {
     [SerializeField]
-    private PlaneSurface plane;
+    private PlaneSurfaceOriginal plane;
     [SerializeField]
     private float rotationSpeed;
 

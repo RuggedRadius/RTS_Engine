@@ -9,6 +9,14 @@ public class Interfaces
         void addToPlayersSelected(GameObject go);
     }
 
+    public interface IAlive
+    {
+        UnitLife life { get; set; }
+        void TakeDamage(int amount);
+        void TakeHealing(int amount);
+    }
+    
+
     public interface IUnitProducing
     {
         void createUnit(Unit unit);

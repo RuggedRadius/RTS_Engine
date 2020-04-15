@@ -27,7 +27,7 @@ public class UnitFlight : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            print("Distance: " + hit.distance);
+            //print("Distance: " + hit.distance);
 
             //this.transform.Find("Model").Translate(Vector3.up * (hit.point.y - 100));
             this.transform.Find("Model").localPosition = Vector3.zero + (Vector3.up * hit.point.y) + (Vector3.up * heightOffset);

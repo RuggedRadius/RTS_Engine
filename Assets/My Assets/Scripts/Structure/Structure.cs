@@ -15,6 +15,9 @@ public class Structure : MonoBehaviour, IUnitProducing
     public string structureName;
     [SerializeField]
     public List<GameObject> producableUnits;
+
+    private Team team;
+
     [SerializeField]
     public GameObject productionFXPrefab;
     [SerializeField]
@@ -41,6 +44,7 @@ public class Structure : MonoBehaviour, IUnitProducing
         // Initialise script references
         resourcesManager = GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourcesManager>();
         productionQueue = new Queue<Unit>();
+        team = transform.root.GetComponent<TeamScript>().team;
     }
 
     void Update()
@@ -116,6 +120,7 @@ public class Structure : MonoBehaviour, IUnitProducing
         // Spawn Unit
         GameObject newUnit = Instantiate(unit.unitPrefab);
         newUnit.transform.parent = this.transform.root.Find("Units");
+        newUnit.GetComponent<Unit>().team = team;
 
         // Position unit
         Vector3 finalPosition = this.transform.position;

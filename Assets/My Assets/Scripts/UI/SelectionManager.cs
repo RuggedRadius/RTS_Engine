@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -32,12 +33,15 @@ public class SelectionManager : MonoBehaviour
 
     // Cannot be serialised as they are static
     public static List<Selectable> selectables = new List<Selectable>();
-    public static List<Unit> selectedUnits = new List<Unit>();
-    public static List<Structure> selectedStructures = new List<Structure>();
+    //public static List<Unit> selectedUnits = new List<Unit>();
+    //public static List<Structure> selectedStructures = new List<Structure>();
+    public static List<dynamic> currentSelection = new List<dynamic>();
 
     [Header("Objects")]
     [SerializeField]
     private Camera cam;
+    [SerializeField]
+    public LayerMask terrainSeekingRayLayer;
 
     [Header("Prefabs")]
     [SerializeField]
@@ -75,20 +79,32 @@ public class SelectionManager : MonoBehaviour
             selectionStarted = false;
 
             uiManager.currentSelection.Clear();
-            if (selectedUnits.Count > 0)
+            if (currentSelection.Count > 0) 
             {
-                foreach (Unit unit in selectedUnits)
+                if (currentSelection[0].GetComponent<Unit>() != null)
                 {
-                    uiManager.currentSelection.Add(unit.gameObject);
+                    RemoveStructuresFromSelections();
+
+                    foreach (dynamic unit in currentSelection)
+                    {
+                        if (unit.GetComponent<Unit>() != null)
+                        {
+                            uiManager.currentSelection.Add(unit.gameObject);
+                        }
+                    }
+                }
+                else if (currentSelection[0].GetComponent<Structure>() != null)
+                {
+                    foreach (dynamic structure in currentSelection)
+                    {
+                        if (structure.GetComponent<Structure>() != null)
+                        {
+                            uiManager.currentSelection.Add(structure.gameObject);
+                        }
+                    }
                 }
             }
-            else
-            {
-                foreach (Structure structure in selectedStructures)
-                {
-                    uiManager.currentSelection.Add(structure.gameObject);
-                }
-            }
+
             uiManager.UpdateUI();
         }
 
@@ -96,8 +112,7 @@ public class SelectionManager : MonoBehaviour
         {
             // Detect which Objects are inside selection rectangle
             Camera camera = Camera.main;
-            selectedUnits.Clear();
-            selectedStructures.Clear();
+            currentSelection.Clear();
 
             for (int i = 0; i < selectables.Count; i++)
             {
@@ -110,24 +125,44 @@ public class SelectionManager : MonoBehaviour
                 // If inside...
                 if (viewportBounds.Contains(currentSelectableWorldPosition))
                 {
-                    // Unit
-                    if (selectables[i].gameObject.GetComponent<Unit>() != null)
-                    {
-                        selectedStructures.Clear();
-
-                        if (selectedUnits.Count < 24)
-                        {
-                            //Debug.Log("Selecting unit");
-                            selectedUnits.Add(selectables[i].gameObject.GetComponent<Unit>());
-                        }
-                    }
 
                     // Structure
                     if (selectables[i].gameObject.GetComponent<Structure>() != null)
                     {
                         //Debug.Log("Selecting structure");
-                        selectedStructures.Add(selectables[i].gameObject.GetComponent<Structure>());
+                        currentSelection.Add(selectables[i].gameObject.GetComponent<Structure>());
                     }
+
+                    // Units 
+                    if (selectables[i].gameObject.GetComponent<Unit>() != null)
+                    {
+                        RemoveStructuresFromSelections();
+
+                        // Ground Melee       
+                        if (selectables[i].gameObject.GetComponent<Unit_GroundMelee>() != null)
+                        {
+                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_GroundMelee>());
+                        }
+
+                        // Ground Ranged      
+                        if (selectables[i].gameObject.GetComponent<Unit_GroundRanged>() != null)
+                        {
+                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_GroundRanged>());
+                        }
+
+                        // Air       
+                        if (selectables[i].gameObject.GetComponent<Unit_Air>() != null)
+                        {
+                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_Air>());
+                        }
+
+                        // Air Transport      
+                        if (selectables[i].gameObject.GetComponent<Unit_Air>() != null)
+                        {
+                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_Air>());
+                        }
+                    }
+
                 }
             }
         }
@@ -135,12 +170,14 @@ public class SelectionManager : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             // If at leats one unit selected
-            if (selectedUnits.Count > 0)
+            if (currentSelection.Count > 0)
             {
                 // Cast ray to terrain from mouse
                 targetRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(targetRay, out RaycastHit hit))
+                print("terrainSeekingRayLayer = " + terrainSeekingRayLayer.value.ToString());
+                if (Physics.Raycast(targetRay, out RaycastHit hit, 10000, terrainSeekingRayLayer, QueryTriggerInteraction.Ignore))
                 {
+                    print(hit.collider.name);
                     // If hit terrain
                     if (hit.collider.gameObject.layer == 8)
                     {
@@ -157,6 +194,44 @@ public class SelectionManager : MonoBehaviour
             }
         }
     }
+    private void AddUnitToSelection(dynamic unit)
+    {
+        // Check current selection count is under maximum
+        if (currentSelection.Count < 24)
+        {
+            // Add unit
+            currentSelection.Add(unit);
+        }
+    }
+
+    private void RemoveStructuresFromSelections()
+    {
+        //print("Removing structrues");
+
+        for (int i = 0; i < currentSelection.Count; i++)
+        {
+            if (currentSelection[i].GetComponent<Structure>() != null)
+            {
+                currentSelection.Remove(currentSelection[i]);
+            }
+        }
+
+        bool allRemoved = false;
+        while (!allRemoved)
+        {
+            for (int i = 0; i < uiManager.currentSelection.Count; i++)
+            {
+                if (uiManager.currentSelection[i].GetComponent<Structure>() != null)
+                {
+                    uiManager.currentSelection.Remove(currentSelection[i]);
+                    break;
+                }
+            }
+            allRemoved = true;
+        }
+    }
+
+
     void OnGUI()
     {
         if (selectionStarted)
@@ -165,34 +240,21 @@ public class SelectionManager : MonoBehaviour
             DrawScreenRectBorder(rect, 2, Color.cyan);
         }
 
-        // Draw selection edges for units
-        if (selectedUnits.Count > 0)
+        // Draw selection edges for current selection
+        if (currentSelection.Count > 0)
         {
             Camera camera = Camera.main;
-            for (int i = 0; i < selectedUnits.Count; i++)
+            for (int i = 0; i < currentSelection.Count; i++)
             {
-                int index = selectables.IndexOf(selectedUnits[i].gameObject.GetComponentInChildren<Selectable>());
+                int index = selectables.IndexOf(currentSelection[i].gameObject.GetComponentInChildren<Selectable>());
                 DrawSelectionIndicator(camera, selectables[index].GetObjectBounds());
             }
         }
-
-        // Draw selection edges for structures
-        if (selectedStructures.Count > 0)
-        {
-            Camera camera = Camera.main;
-            for (int i = 0; i < selectedStructures.Count; i++)
-            {
-                int index = selectables.IndexOf(selectedStructures[i].gameObject.GetComponentInChildren<Selectable>());
-                DrawSelectionIndicator(camera, selectables[index].GetObjectBounds());
-            }
-        }
-
-
     }
 
     private void createTargetMarker(Vector3 position)
     {
-        print("Creating target marker at " + position);
+        //print("Creating target marker at " + position);
         if (lastTargetLocationObject != null)
         {
             Destroy(lastTargetLocationObject);
@@ -205,9 +267,12 @@ public class SelectionManager : MonoBehaviour
     }
     private void moveSelectedUnitsTo(Vector3 _destination)
     {
-        foreach (Unit unit in selectedUnits)
+        foreach (dynamic unit in currentSelection)
         {
-            unit.move(_destination);
+            if (unit.GetComponent<Unit>() != null)
+            {
+                unit.GetComponent<Unit>().move(_destination);
+            }
         }
     }
     private bool isMouseOverUI()

@@ -23,7 +23,7 @@ public class LineParticle : MonoBehaviour
 
 	[Header("Modded")]
 	[SerializeField]
-	private PlaneSurface planeSurface;
+	private PlaneSurfaceOriginal planeSurface;
 
 	private int m_CurrentPointLength = 0;
 	private int m_CurrentResolution = 0;

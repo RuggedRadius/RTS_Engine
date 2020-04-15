@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlaneSurface : MonoBehaviour
+public class PlaneSurfaceOriginal : MonoBehaviour
 {
     [SerializeField]
     public int width;
@@ -26,16 +26,6 @@ public class PlaneSurface : MonoBehaviour
         tmpNodeObjects = new List<GameObject>();
         populateNodes();
         createPlanes();
-    }
-
-    private void Update()
-    {
-        updateQuadVertices();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(wave());
-        }
     }
 
     private void updateQuadVertices()

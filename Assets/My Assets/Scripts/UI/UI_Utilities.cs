@@ -12,7 +12,7 @@ public class UI_Utilities : MonoBehaviour
     {
         // Create button prefab
         GameObject newTile = Instantiate(uiTilePrefab);
-        newTile.transform.parent = uiManager.panelSelection.transform;
+        newTile.transform.SetParent(uiManager.panelSelection.transform);
 
         // Set Sprite
         Button btn = newTile.GetComponent<Button>();

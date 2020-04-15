@@ -63,13 +63,13 @@ public class Selectable : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
                     // Multi-select
-                    SelectionManager.selectedUnits.Add(this.GetComponent<Unit>());
+                    SelectionManager.currentSelection.Add(this.GetComponent<Unit>());
                 }
                 else
                 {
                     // Single select
-                    SelectionManager.selectedUnits.Clear();
-                    SelectionManager.selectedUnits.Add(this.GetComponent<Unit>());
+                    SelectionManager.currentSelection.Clear();
+                    SelectionManager.currentSelection.Add(this.GetComponent<Unit>());
                 }                
                 break;
 
@@ -77,13 +77,13 @@ public class Selectable : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
                     // Multi-select
-                    SelectionManager.selectedStructures.Add(this.GetComponent<Structure>());
+                    SelectionManager.currentSelection.Add(this.GetComponent<Structure>());
                 }
                 else
                 {
                     // Single select
-                    SelectionManager.selectedStructures.Clear();
-                    SelectionManager.selectedStructures.Add(this.GetComponent<Structure>());
+                    SelectionManager.currentSelection.Clear();
+                    SelectionManager.currentSelection.Add(this.GetComponent<Structure>());
                 }
                 break;
         }

@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 8829884804693441966}
   - component: {fileID: 4342560483136370050}
   - component: {fileID: 8099439527095956567}
+  - component: {fileID: 7305430384583618213}
   m_Layer: 0
   m_Name: Unit_Ground_Melee
   m_TagString: Untagged
@@ -170,6 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Ground Mele Unit
+  unitType: 0
   unitSpeed: 5
   unitBaseDamage: 0
   unitBuildTime: 1
@@ -191,6 +193,7 @@ MonoBehaviour:
   anim: {fileID: 2013614538452846075}
   unitLife: {fileID: 0}
   destinationTolerance: 1
+  agent: {fileID: 0}
 --- !u!114 &4342560483136370050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,6 +231,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
+--- !u!114 &7305430384583618213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3489631472464017579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 688e2c57f93ea4e41a7e0b625773c52b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unit: {fileID: 8829884804693441966}
 --- !u!1 &6161111041417217480
 GameObject:
   m_ObjectHideFlags: 0
