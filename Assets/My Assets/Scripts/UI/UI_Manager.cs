@@ -38,6 +38,11 @@ public class UI_Manager : MonoBehaviour
         sizeInteractionSubPanels();
     }
 
+    private void Update()
+    {
+        GetUpdatedSelection();
+    }
+
     public void sizeMainPanels()
     {
         // Determine panel widths
@@ -142,6 +147,15 @@ public class UI_Manager : MonoBehaviour
         }
     }
 
+    private void GetUpdatedSelection()
+    {
+        currentSelection.Clear();
 
+        SelectionManager selManager = GameObject.FindGameObjectWithTag("Selection Manager").GetComponent<SelectionManager>();
+        foreach (dynamic d in SelectionManager.currentSelection)
+        {
+            currentSelection.Add(d.gameObject);
+        }
+    }
     // Event when screen changes size
 }

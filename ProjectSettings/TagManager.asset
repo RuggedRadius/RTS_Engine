@@ -9,6 +9,8 @@ TagManager:
   - ResourceManager
   - UIManager
   - TeamManager
+  - FocalPoint
+  - CamMinimap3D
   layers:
   - Default
   - TransparentFX

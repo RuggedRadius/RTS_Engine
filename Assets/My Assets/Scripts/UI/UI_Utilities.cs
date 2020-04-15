@@ -44,7 +44,7 @@ public class UI_Utilities : MonoBehaviour
     {
         // Create button prefab
         GameObject newTile = Instantiate(uiTilePrefab);
-        newTile.transform.parent = uiManager.panelAction.transform;
+        newTile.transform.SetParent(uiManager.panelAction.transform);
 
         // Set Sprite
         Button btn = newTile.GetComponent<Button>();

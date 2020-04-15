@@ -19,7 +19,7 @@ public class TeamScript : MonoBehaviour
     [SerializeField]
     public Team team;
 
-    [SerializeField]
+    [HideInInspector]
     public Color teamColour;
 
 

@@ -16,7 +16,7 @@ public class UI_ActionPanel : MonoBehaviour
     void Start()
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
-        uiUtils = this.transform.root.GetComponent<UI_Utilities>();
+        uiUtils = uiManager.GetComponent<UI_Utilities>();
         currentActionTiles = new List<GameObject>();
     }
 

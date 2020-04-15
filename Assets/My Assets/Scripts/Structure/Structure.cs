@@ -127,13 +127,14 @@ public class Structure : MonoBehaviour, IUnitProducing
         finalPosition += -transform.forward * 6;
 
         Ray ray = new Ray(finalPosition + (100 * Vector3.up), Vector3.down);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit, 10000, 256, QueryTriggerInteraction.Ignore))
         {
             finalPosition = new Vector3(
                 finalPosition.x,
                 hit.point.y,
                 finalPosition.z
                 );
+            //print("Adjusted height for unit creation");
         }
 
         newUnit.transform.position = finalPosition;
