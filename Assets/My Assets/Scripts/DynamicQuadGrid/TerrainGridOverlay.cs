@@ -56,6 +56,31 @@ public class TerrainGridOverlay : MonoBehaviour
 
         DrawGrid(xSize, zSize);
     }
+    private void overlayTerrain(MeshRenderer _terrain)
+    {
+        // Populate points
+        int xSize = (int)_terrain.transform.localScale.x + 1;
+        int zSize = (int)_terrain.transform.localScale.z + 1;
+        points = new Vector3[xSize, zSize];
+
+        for (int i = 0; i < xSize; i++)
+        {
+            for (int j = 0; j < zSize; j++)
+            {
+
+                // CHANGE THIS TO SHOOT A RAY DOWN AND SAMPLE HEIGHT
+
+
+                points[i, j] = new Vector3(
+                    i,
+                    terrain.SampleHeight(new Vector3(i, 0, j)) + terrainGridHeight,
+                    j
+                    );
+            }
+        }
+
+        DrawGrid(xSize, zSize);
+    }
 
     private void DrawGrid(int width, int length)
     {

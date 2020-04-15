@@ -127,7 +127,7 @@ public class CameraMovement : MonoBehaviour
         else
         {
             Debug.LogError("No terrain below!");
-            return -100f;
+            return 0f;
         }
                
     }
@@ -137,7 +137,8 @@ public class CameraMovement : MonoBehaviour
         focalZ = focalPoint.transform.position.z;
 
         // Y-Axis
-        focalY = getHeightFromPosition(focalPoint.transform.position);
+        //focalY = getHeightFromPosition(focalPoint.transform.position);
+        focalY = 0f;
         //focalY += 0.5f;
 
         // Set focal point position

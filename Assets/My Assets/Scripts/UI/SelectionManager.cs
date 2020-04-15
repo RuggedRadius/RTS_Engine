@@ -186,13 +186,11 @@ public class SelectionManager : MonoBehaviour
                 DrawSelectionIndicator(camera, selectables[index].GetObjectBounds());
             }
         }
-
-
     }
 
     private void createTargetMarker(Vector3 position)
     {
-        print("Creating target marker at " + position);
+        //print("Creating target marker at " + position);
         if (lastTargetLocationObject != null)
         {
             Destroy(lastTargetLocationObject);
