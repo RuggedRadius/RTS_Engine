@@ -11,44 +11,39 @@ using static Unit;
 [Serializable]
 public class Structure : MonoBehaviour, IUnitProducing
 {
-    private GameManager gm;
-    private SelectionManager sm;
-
-
+    [Header("Unit Information")]
     [SerializeField]
     public string structureName;
+
+    [Header("State")]
+    public bool creatingUnit;
+
+    [Header("Unit Production")]
     [SerializeField]
     public List<GameObject> producableUnits;
+    [SerializeField]
+    public Queue<Unit> productionQueue;
+    public float currentProductionProgress;
+    [SerializeField]
+    private Text productionText;
 
-    private Team team;
-
+    [Header("References")]
     [SerializeField]
     public GameObject productionFXPrefab;
     [SerializeField]
     public Sprite uiTileSprite;
 
-    [SerializeField]
-    public Queue<Unit> productionQueue;
-    public float currentProductionProgress;
-
-    [SerializeField]
-    private Text productionText;
-
+    [Header("Rally Point")]
     [SerializeField]
     private Vector3 rallyPointLocation;
     [SerializeField]
     private GameObject rallyPointLocationPrefab;
+
     private GameObject rallyPoint;
-
     private Vector3 defaultSpawnLocation;
-
-
-
-    public bool creatingUnit;
-
-    [SerializeField]
-    Terrain terrain;
-
+    private Team team;
+    private GameManager gm;
+    private SelectionManager sm;
     private ResourcesManager resourcesManager;
 
     private void Awake()
@@ -100,7 +95,7 @@ public class Structure : MonoBehaviour, IUnitProducing
 
     private void DisplayRallyPoint()
     {
-        if (sm.currentSelection.Contains(this))
+        if (sm.currentSelection.Contains(this.gameObject))
         {
             // Selected, show rally point
             if (rallyPoint == null)
@@ -128,7 +123,7 @@ public class Structure : MonoBehaviour, IUnitProducing
             if (!creatingUnit)
             {
                 StartCoroutine(unitCreation(productionQueue.Peek()));
-                productionQueue.Dequeue();
+                
             }
         }
     }
@@ -180,10 +175,10 @@ public class Structure : MonoBehaviour, IUnitProducing
 
         // Build time wait
         float timer = 0f;
-        while (timer <= unit.unitBuildTime)
+        while (timer <= unit.buildTime)
         {
             productionText.transform.parent.LookAt(Camera.main.transform);
-            currentProductionProgress = (timer / unit.unitBuildTime) * 100f;
+            currentProductionProgress = (timer / unit.buildTime) * 100f;
             productionText.text = (int)currentProductionProgress + "%";
             timer += Time.deltaTime;
             yield return null;
@@ -220,10 +215,12 @@ public class Structure : MonoBehaviour, IUnitProducing
         yield return new WaitForSeconds(0.1f);
 
         // Move to rally point
-        newUnit.GetComponent<Unit>().move(rallyPointLocation);
+        newUnit.GetComponent<Unit>().movement.move(rallyPointLocation);
 
         // Stop FX
         Destroy(fx);
+
+        productionQueue.Dequeue();
 
         creatingUnit = false;
         yield return null;

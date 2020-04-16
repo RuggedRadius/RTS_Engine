@@ -11,7 +11,7 @@ public class Interfaces
 
     public interface IAlive
     {
-        UnitLife life { get; set; }
+        Unit_Life life { get; set; }
         void TakeDamage(int amount);
         void TakeHealing(int amount);
     }

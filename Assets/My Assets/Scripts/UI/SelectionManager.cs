@@ -36,7 +36,7 @@ public class SelectionManager : MonoBehaviour
 
     // Cannot be serialised as they are static
     public static List<Selectable> selectables = new List<Selectable>();
-    public List<dynamic> currentSelection = new List<dynamic>();
+    public List<GameObject> currentSelection = new List<GameObject>();
 
     [Header("Layers")]
     [SerializeField]
@@ -73,48 +73,11 @@ public class SelectionManager : MonoBehaviour
             else
             {
                 // Mouse is not over UI
+
                 if (!sendingMoveOrder)
                 {
                     selectionStarted = true;
-                    mousePosition1 = Input.mousePosition;
-
-
-                    //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    //Debug.DrawRay(ray.origin, ray.direction, Color.green, 3);
-                    //if (Physics.Raycast(ray, out RaycastHit hit))
-                    //{
-                    //    switch (hit.collider.gameObject.layer)
-                    //    {
-                    //        // Unit
-                    //        //case 9:
-                                
-                    //        //    if (hit.collider.gameObject.GetComponent<Unit>().team != Team.Team1)
-                    //        //    {
-                    //        //        print("clicked an enemy unit");
-                    //        //        // Enemy unit
-                    //        //        currentSelection.Clear();
-                    //        //        AddUnitToSelection(hit.collider.gameObject.GetComponent<Unit>());
-                    //        //    }
-                    //        //    else
-                    //        //    {
-                    //        //        print("clicked a friendly unit");
-                    //        //        // Friendly unit
-                    //        //        currentSelection.Clear();
-                    //        //        AddUnitToSelection(hit.collider.gameObject.GetComponent<Unit>());
-                    //        //    }
-                    //        //    break;
-
-                    //        default:
-                    //            selectionStarted = true;
-                    //            mousePosition1 = Input.mousePosition;
-                    //            break;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    selectionStarted = true;
-                    //    mousePosition1 = Input.mousePosition;
-                    //}
+                    mousePosition1 = Input.mousePosition;  
                 }
                 else
                 {
@@ -133,7 +96,6 @@ public class SelectionManager : MonoBehaviour
                     else
                     {
                         print("Didnt hit terrain with mouse order mouse click");
-                        
                     }
                 }
             }
@@ -168,7 +130,7 @@ public class SelectionManager : MonoBehaviour
                     if (selectables[i].gameObject.GetComponent<Structure>() != null)
                     {
                         //Debug.Log("Selecting structure");
-                        currentSelection.Add(selectables[i].gameObject.GetComponent<Structure>());
+                        currentSelection.Add(selectables[i].gameObject);
                     }
 
                     // Units 
@@ -334,49 +296,11 @@ public class SelectionManager : MonoBehaviour
     }
     private void AddUnitToSelection(Unit unit)
     {
-        // Ground Melee       
-        if (unit.gameObject.GetComponent<Unit_GroundMelee>() != null)
+        // Check current selection count is under maximum
+        if (currentSelection.Count < 24)
         {
-            // Check current selection count is under maximum
-            if (currentSelection.Count < 24)
-            {
-                // Add unit
-                currentSelection.Add(unit.gameObject.GetComponent<Unit_GroundMelee>());
-            }
-        }
-        // Ground Ranged      
-        else if (unit.gameObject.GetComponent<Unit_GroundRanged>() != null)
-        {
-            // Check current selection count is under maximum
-            if (currentSelection.Count < 24)
-            {
-                // Add unit
-                currentSelection.Add(unit.gameObject.GetComponent<Unit_GroundMelee>());
-            }
-        }
-        // Air       
-        else if (unit.gameObject.GetComponent<Unit_Air>() != null)
-        {
-            // Check current selection count is under maximum
-            if (currentSelection.Count < 24)
-            {
-                // Add unit
-                currentSelection.Add(unit.gameObject.GetComponent<Unit_GroundMelee>());
-            }
-        }
-        // Air Transport      
-        else if (unit.gameObject.GetComponent<Unit_Air>() != null)
-        {
-            // Check current selection count is under maximum
-            if (currentSelection.Count < 24)
-            {
-                // Add unit
-                currentSelection.Add(unit.gameObject.GetComponent<Unit_GroundMelee>());
-            }
-        }
-        else
-        {
-            Debug.LogError("Unit not added to selection as its type was not determined.");
+            // Add unit
+            currentSelection.Add(unit.gameObject);
         }
     }
 
@@ -398,7 +322,11 @@ public class SelectionManager : MonoBehaviour
         {
             if (d.GetComponent<Unit>() != null)
             {
-                d.GetComponent<Unit>().Attack(target);
+                d.GetComponent<Unit>().attack.attack(target);
+            }
+            else
+            {
+                Debug.LogError("No unit script found for unit in current selection");
             }
         }
     }
@@ -442,7 +370,7 @@ public class SelectionManager : MonoBehaviour
         {
             if (unit.GetComponent<Unit>() != null)
             {
-                unit.GetComponent<Unit>().move(_destination);
+                unit.GetComponent<Unit>().movement.move(_destination);
             }
         }
     }

@@ -57,9 +57,9 @@ public class UI_InformationPanel : MonoBehaviour
         SetPanelForUnit();
 
         valueName.text = unit.unitName;
-        value1.text = unit.unitBaseDamage.ToString();
-        value2.text = unit.unitBaseArmour.ToString();
-        value3.text = unit.unitSpeed.ToString();
+        value1.text = unit.stats.unitBaseDamage.ToString();
+        value2.text = unit.stats.unitBaseArmour.ToString();
+        value3.text = unit.stats.unitSpeed.ToString();
     }
     public void UpdateTextInformation(Structure structure)
     {

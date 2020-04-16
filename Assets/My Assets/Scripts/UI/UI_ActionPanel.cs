@@ -26,263 +26,74 @@ public class UI_ActionPanel : MonoBehaviour
     {
         ClearActionsPanel();
 
-        switch (unit.unitType)
+        if (unit is IAttacking)
         {
-            case UnitType.GroundRanged:
-                if (unit.GetComponent<Unit_GroundRanged>() is IAttacking)
-                {
-                    // Create tile
-                    Action newAction = new Action(
-                        "Attack",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Attack
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
+            // Create tile
+            Action newAction = new Action(
+                "Attack",
+                uiManager.GetComponent<UI_TileManager>().UI_Action_Attack
+                );
+            GameObject newProducableUnitTile = uiUtils.createTile(newAction);
+            currentActionTiles.Add(newProducableUnitTile);
 
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate () {
-                        // Action
-                        //unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
-                    });
-                }
-                if (unit is IMovable)
-                {
-                    // MOVE:
-                    // Create tile
-                    Action newAction = new Action(
-                        "Move",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Move
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
+            // Button event
+            newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate () {
+                // Action
+                //unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
+            });
+        }
+        if (unit is IMovable)
+        {
+            // MOVE:
+            // Create tile
+            Action newAction = new Action(
+                "Move",
+                uiManager.GetComponent<UI_TileManager>().UI_Action_Move
+                );
+            GameObject newProducableUnitTile = uiUtils.createTile(newAction);
+            currentActionTiles.Add(newProducableUnitTile);
 
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Move Player to next valid click or cancel
-                        print("Move unit clicked");
-                        Debug.Log("Move unit clicked");
-                        selectionManager.sendingMoveOrder = true;
-                    });
+            // Button event
+            newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
+            {
+                // Move Player to next valid click or cancel
+                print("Move unit clicked");
+                Debug.Log("Move unit clicked");
+                selectionManager.sendingMoveOrder = true;
+            });
 
-                    // STOP:
-                    // Create tile
-                    newAction = new Action(
-                        "Stop",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Stop
-                        );
-                    newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
+            // STOP:
+            // Create tile
+            newAction = new Action(
+                "Stop",
+                uiManager.GetComponent<UI_TileManager>().UI_Action_Stop
+                );
+            newProducableUnitTile = uiUtils.createTile(newAction);
+            currentActionTiles.Add(newProducableUnitTile);
 
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Action
-                        unit.stopMoving();
-                    });
-                }
-                if (unit is IMovable && unit is IAttacking)
-                {
-                    // Create tile
-                    Action newAction = new Action(
-                        "Attack Move",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_AttackMove
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
+            // Button event
+            newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
+            {
+                // Action
+                unit.movement.stopMoving();
+            });
+        }
+        if (unit is IMovable && unit is IAttacking)
+        {
+            // Create tile
+            Action newAction = new Action(
+                "Attack Move",
+                uiManager.GetComponent<UI_TileManager>().UI_Action_AttackMove
+                );
+            GameObject newProducableUnitTile = uiUtils.createTile(newAction);
+            currentActionTiles.Add(newProducableUnitTile);
 
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Action
-                        // ...
-                    });
-                }
-                break;
-
-            case UnitType.GroundMelee:
-                if (unit is IAttacking)
-                {
-                    // Create tile
-                    Action newAction = new Action(
-                        "Attack",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Attack
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate () {
-                        // Action
-                        switch (unit.unitType)
-                        {
-                            case UnitType.GroundRanged:
-                                //unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.GroundMelee:
-                                unit.GetComponent<Unit_GroundMelee>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.Air:
-                                unit.GetComponent<Unit_Air>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.AirTransport:
-                                unit.GetComponent<Unit_Air>().attack(unit.transform.position);
-                                break;
-
-                        }
-                    });
-                }
-                if (unit is IMovable)
-                {
-                    // MOVE:
-                    // Create tile
-                    Action newAction = new Action(
-                        "Move",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Move
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Move Player to next valid click or cancel
-                        // ...
-                        // Move Player to next valid click or cancel
-                        print("Move unit clicked");
-                        Debug.Log("Move unit clicked");
-                        selectionManager.sendingMoveOrder = true;
-                    });
-
-                    // STOP:
-                    // Create tile
-                    newAction = new Action(
-                        "Stop",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Stop
-                        );
-                    newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Action
-                        unit.stopMoving();
-                    });
-                }
-                if (unit is IMovable && unit is IAttacking)
-                {
-                    // Create tile
-                    Action newAction = new Action(
-                        "Attack Move",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_AttackMove
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Action
-                        // ...
-                    });
-                }
-                break;
-
-            case UnitType.Air:
-                if (unit is IAttacking)
-                {
-                    // Create tile
-                    Action newAction = new Action(
-                        "Attack",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Attack
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate () {
-                        // Action
-                        switch (unit.unitType)
-                        {
-                            case UnitType.GroundRanged:
-                                //unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.GroundMelee:
-                                unit.GetComponent<Unit_GroundMelee>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.Air:
-                                unit.GetComponent<Unit_Air>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.AirTransport:
-                                unit.GetComponent<Unit_Air>().attack(unit.transform.position);
-                                break;
-
-                        }
-                    });
-                }
-                if (unit is IMovable)
-                {
-                    // MOVE:
-                    // Create tile
-                    Action newAction = new Action(
-                        "Move",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Move
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Move Player to next valid click or cancel
-                        // ...
-                        // Move Player to next valid click or cancel
-                        print("Move unit clicked");
-                        Debug.Log("Move unit clicked");
-                        selectionManager.sendingMoveOrder = true;
-                    });
-
-                    // STOP:
-                    // Create tile
-                    newAction = new Action(
-                        "Stop",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Stop
-                        );
-                    newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Action
-                        unit.stopMoving();
-                    });
-                }
-                if (unit is IMovable && unit is IAttacking)
-                {
-                    // Create tile
-                    Action newAction = new Action(
-                        "Attack Move",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_AttackMove
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Action
-                        // ...
-                    });
-                }
-                break;
+            // Button event
+            newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
+            {
+                // Action
+                // ...
+            });
         }
     }
 

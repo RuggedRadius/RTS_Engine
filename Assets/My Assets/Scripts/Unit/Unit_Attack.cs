@@ -1,69 +1,88 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Interfaces;
 
-public class Unit_GroundRanged : MonoBehaviour, IMovable, IAttacking
+public class Unit_Attack : MonoBehaviour
 {
-    private GameManager gm;
-    private SelectionManager sm;
+    [SerializeField]
+    private float range;
 
     [SerializeField]
-    Unit unit;
+    public List<GameObject> inRangeEnemies;
 
     [SerializeField]
-    private GameObject muzzleFlashPrefab;
+    public LayerMask enemyScanLayer;
 
-    [SerializeField]
-    private UnitAttackRange attackRange;
+ 
+    private Unit unit;
 
-
-
-    public void Start()
+    private void Awake()
     {
-        attackRange = GetComponent<UnitAttackRange>();
-        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        sm = gm.GetComponentInChildren<SelectionManager>();
+        unit = this.GetComponent<Unit>();
     }
 
-    public void Update()
+    void Start()
     {
-        if (sm.currentSelection.Contains(this))
+        StartCoroutine(scanForEnemies());
+    }
+
+    public IEnumerator scanForEnemies()
+    {
+        RaycastHit hitScan;
+        Ray ray;
+        Vector3 rayOrigin;
+        Vector3 rayDirection;
+        int rayCount = 180;
+        while (unit.life.alive)
         {
-            this.transform.Find("Life Bar").gameObject.SetActive(true);
-        }
-        else
-        {
-            this.transform.Find("Life Bar").gameObject.SetActive(false);
-        }
-    }
+            inRangeEnemies.Clear();
 
-    public void move(Vector3 destination)
-    {
-        StopAllCoroutines();
-        unit.agent.SetDestination(destination);
-    }
 
-    public void stopMoving()
-    {
-        StopAllCoroutines();
-        unit.agent.SetDestination(unit.agent.nextPosition);
+            for (int i = 0; i <= rayCount; i++)
+            {
+                rayOrigin = this.transform.position + Vector3.up;
+                rayDirection = Vector3.Lerp(-transform.right + transform.forward, transform.right + transform.forward, (float)i/(float)rayCount);
+                
+                ray = new Ray(rayOrigin, rayDirection);
+                Debug.DrawRay(rayOrigin, rayDirection * range, Color.yellow, 1f);
+
+                if (Physics.Raycast(ray, out hitScan, range, enemyScanLayer, QueryTriggerInteraction.Ignore))
+                {
+                    // Unit hit
+                    if (hitScan.collider.gameObject.GetComponent<Unit>() != null)
+                    {
+                        Unit hitUnit = hitScan.collider.gameObject.GetComponent<Unit>();
+                        if (hitUnit.team != unit.team)
+                        {
+                            if (!inRangeEnemies.Contains(hitScan.collider.gameObject))
+                            {
+                                // Enemy Unit found
+                                inRangeEnemies.Add(hitUnit.gameObject);
+                            }
+                        }
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     public void attack(GameObject target)
     {
         StopAllCoroutines();
+        StartCoroutine(scanForEnemies());
         StartCoroutine(attackUnitRoutine(target));
     }
 
-    bool attacking;
+    public bool attacking;
     public IEnumerator attackUnitRoutine(GameObject target)
     {
         Unit targetUnit = target.GetComponent<Unit>();
 
         if (targetUnit != null)
         {
-            UnitLife targetLife = targetUnit.GetComponent<UnitLife>();
+            Unit_Life targetLife = targetUnit.GetComponent<Unit_Life>();
 
             if (targetLife != null)
             {
@@ -76,30 +95,24 @@ public class Unit_GroundRanged : MonoBehaviour, IMovable, IAttacking
                     // Look at target
                     this.transform.LookAt(target.transform);
 
-                    if (attackRange.inRangeEnemies.Contains(target))
+                    if (inRangeEnemies.Contains(target))
                     {
                         //print("Target in range, attacking: " + target.name);
 
                         // Stop moving
                         unit.agent.SetDestination(unit.transform.position);
 
-                        // Create muzzle flash
-                        GameObject muzzleFlash = Instantiate(muzzleFlashPrefab);
-                        muzzleFlash.transform.SetParent(this.transform);
-                        muzzleFlash.transform.localPosition = new Vector3(0.67f, 1.16f, 1.8f);
-                        //muzzleFlash.transform.localScale = Vector3.one * 10;
-
                         // SFX
                         // ...
 
                         // Target take damage
-                        targetLife.TakeDamage((int)unit.unitBaseDamage);
+                        targetLife.TakeDamage((int)unit.stats.unitBaseDamage);
 
                         yield return new WaitForSeconds(1);
                     }
                     else
                     {
-                        while (!attackRange.inRangeEnemies.Contains(target))
+                        while (attacking && !inRangeEnemies.Contains(target))
                         {
                             //print("Moving to target");
 
@@ -113,7 +126,7 @@ public class Unit_GroundRanged : MonoBehaviour, IMovable, IAttacking
                                 attacking = false;
                             }
 
-                            yield return new WaitForSeconds(1);
+                            yield return new WaitForSeconds(0.1f);
                         }
                     }
 
@@ -138,12 +151,10 @@ public class Unit_GroundRanged : MonoBehaviour, IMovable, IAttacking
         yield return null;
     }
 
-    //public void attack(Vector3 position)
-    //{
-    //    GameObject muzzleFlash = Instantiate(muzzleFlashPrefab);
-    //    muzzleFlash.transform.SetParent(this.transform);
-    //    muzzleFlash.transform.localPosition = new Vector3(0.67f, 1.16f, 1.8f);
-    //}
+    public void attack(Vector3 position)
+    {
+
+    }
 
     public void stopAttack()
     {

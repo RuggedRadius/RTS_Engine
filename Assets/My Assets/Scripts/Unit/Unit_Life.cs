@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitLife : MonoBehaviour
+public class Unit_Life : MonoBehaviour
 {
     public bool alive;
     [SerializeField]
     public int lifeCurrent;
     public int lifeMaximum;
 
-    [SerializeField]
+    //[SerializeField]
     private Image worldLifeBar;
 
     //[SerializeField]
@@ -19,16 +19,32 @@ public class UnitLife : MonoBehaviour
     [SerializeField]
     private Material materialDamage;
 
+    private SelectionManager sm;
+
+    
+
     private void Awake()
     {
         alive = true;
         lifeCurrent = lifeMaximum;
         modelTransform = this.transform.Find("Model");
 
+        worldLifeBar = this.GetComponent<Unit>().worldLifeBarPanel;
         worldLifeBar.gameObject.SetActive(true);
+
+        sm = GameObject.FindGameObjectWithTag("Selection Manager").GetComponent<SelectionManager>();
     }
 
     void Update()
+    {
+        CheckAlive();
+
+        LifeBarDisplayIfSelected();
+
+        worldLifeBar.color = GetCurrentLifeBarColour();
+    }
+
+    private void CheckAlive()
     {
         if (alive)
         {
@@ -41,8 +57,18 @@ public class UnitLife : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
 
-        worldLifeBar.color = GetCurrentLifeBarColour();
+    private void LifeBarDisplayIfSelected()
+    {
+        if (sm.currentSelection.Contains(this.gameObject))
+        {
+            this.transform.Find("Life Bar").gameObject.SetActive(true);
+        }
+        else
+        {
+            this.transform.Find("Life Bar").gameObject.SetActive(false);
+        }
     }
 
 

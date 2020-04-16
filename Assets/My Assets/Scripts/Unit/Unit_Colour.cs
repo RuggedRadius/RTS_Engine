@@ -2,25 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitColour : MonoBehaviour
+public class Unit_Colour : MonoBehaviour
 {
     //[SerializeField]
     private Unit unit;
 
     [SerializeField]
-    public MeshRenderer[] colouredRenderers;
+    
 
     private TeamManager tm;
 
     void Start()
     {
-        tm = GameObject.FindGameObjectWithTag("TeamManager").GetComponent<TeamManager>();
-        unit = this.transform.parent.GetComponent<Unit>();
 
-        foreach (MeshRenderer mr in colouredRenderers)
-        {
-            mr.material = GetTeamColour(unit.team);
-        }
     }
 
     private Material GetTeamColour(Team team)
@@ -56,8 +50,5 @@ public class UnitColour : MonoBehaviour
         }
     }
 
-    private void ColourUnit()
-    {
 
-    }
 }

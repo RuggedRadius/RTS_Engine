@@ -69,7 +69,7 @@ public class UI_SelectionPanel : MonoBehaviour
     {
         ClearCurrentStructureQueue();
 
-        foreach (Unit unit in sm.currentSelection[0].productionQueue)
+        foreach (Unit unit in sm.currentSelection[0].GetComponent<Structure>().productionQueue)
         {
             // Display to UI
             GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
@@ -109,7 +109,7 @@ public class UI_SelectionPanel : MonoBehaviour
                     go.GetComponent<Button>().onClick.AddListener(delegate () {
                         sm.currentSelection.Clear();
                         sm.currentSelection.Clear();
-                        sm.currentSelection.Add((Structure)_structure);
+                        sm.currentSelection.Add(_structure.gameObject);
                         updateUITiles();
                     });
                 }

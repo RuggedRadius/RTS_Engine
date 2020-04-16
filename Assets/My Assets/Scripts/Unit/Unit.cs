@@ -3,149 +3,76 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using static Interfaces;
 
 [Serializable]
-public class ResourceCost
-{
-    [SerializeField]
-    public ResourceType type;
-    [SerializeField]
-    public int cost;
-}
-
-public enum UnitType
-{
-    GroundMelee,
-    GroundRanged,
-    Air,
-    AirTransport
-}
-
-[Serializable]
-public class Unit : MonoBehaviour, IMovable
+public class Unit : MonoBehaviour
 {
     #region Properties
     [Header("Unit Information")]
-    [SerializeField]
     public string unitName;
     public UnitType unitType;
     public Team team;
-
-    [Header("Stats")]
-    [SerializeField]
-    [Range(5f, 20f)]
-    public float unitSpeed;
-    [SerializeField]
-    public float unitBaseDamage;
-    [SerializeField]
-    public float unitBuildTime;
-    [SerializeField]
-    public float unitBaseArmour;
-    [SerializeField]
-    public float unitAcceleration;
-    [SerializeField]
-    public float unitRadius;
-    [SerializeField]
-    public float unitHeight;
-    [SerializeField]
-    public float unitStoppingDistance;
-
-
-
-
-    [SerializeField]
     public List<ResourceCost> resourceCosts;
+    public float buildTime;
 
     [Header("Prefab Resources")]
-    [SerializeField]
     public GameObject unitPrefab;
-    [SerializeField]
     public Sprite uiTileSprite;
 
-    [Header("State")]
-    public bool moving;
+
 
     [Header("References")]
     [SerializeField]
     private Animator anim;
-    public UnitLife unitLife;
+    public Image worldLifeBarPanel;
 
     [Header("Settings")]
     [SerializeField]
     private float destinationTolerance;
-    
+
+    [Header("State")]
+    public bool moving;
+
+
+
+    private GameManager gm;
+    private TeamManager tm;
+
+    //[HideInInspector]
+    public Unit_Life life;
+    //[HideInInspector]
+    public Unit_Statistics stats;
+    //[HideInInspector]
+    public Unit_Attack attack;
+    //[HideInInspector]
     public NavMeshAgent agent;
+    //[HideInInspector]
+    public Unit_Movement movement;
+
     #endregion
 
-    #region MonoBehaviour
     private void Awake()
     {
-        InitialiseNavMashAgent();
-        unitLife = this.gameObject.GetComponent<UnitLife>();
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        tm = gm.GetComponentInChildren<TeamManager>();
+
+        life = this.GetComponent<Unit_Life>();
+        stats = this.gameObject.GetComponent<Unit_Statistics>();
+        attack = this.gameObject.GetComponent<Unit_Attack>();
+        movement = this.gameObject.GetComponent<Unit_Movement>();
+
+
     }
 
     private void Start()
     {
         team = this.transform.root.GetComponent<TeamScript>().team;
-
-    }
-
-    private void Update()
-    {
-
-    }
-    #endregion
-
-    private void InitialiseNavMashAgent()
-    {
         agent = this.gameObject.GetComponent<NavMeshAgent>();
-        agent.speed = unitSpeed;
-        agent.acceleration = unitAcceleration;
-        agent.stoppingDistance = unitStoppingDistance;
-        agent.radius = unitRadius;
-        agent.height = unitHeight;
+
+        stats = this.GetComponent<Unit_Statistics>();
     }
-
-    #region IMovable interface
-    public void move(Vector3 destination)
-    {
-        moving = true;
-
-        switch (unitType)
-        {
-            case UnitType.GroundMelee:
-                this.GetComponent<Unit_GroundMelee>().move(destination);
-                break;
-
-            case UnitType.Air:
-                this.GetComponent<Unit_Air>().move(destination);
-                break;
-
-            case UnitType.GroundRanged:
-                this.GetComponent<Unit_GroundRanged>().move(destination);
-                break;
-
-            case UnitType.AirTransport:
-                //this.GetComponent<Unit>().move(destination);
-                break;
-        }
-
-        //agent.SetDestination(destination);
-
-        // Update animator values
-        updateAnimatorValues();
-    }
-
-    public void stopMoving()
-    {
-        agent.SetDestination(agent.nextPosition);
-        moving = false;
-
-        // Update animator values
-        updateAnimatorValues();
-    }
-    #endregion
 
     public void updateAnimatorValues()
     {
@@ -156,33 +83,6 @@ public class Unit : MonoBehaviour, IMovable
         else
         {
             Debug.LogWarning("No animator set for unit: " + this.gameObject.name);
-        }
-    }
-
-    private Vector3 distanceToDestination(Vector3 _destination)
-    {
-        return new Vector3( 
-            _destination.x - agent.transform.position.x,
-            _destination.y - agent.transform.position.y,
-            _destination.z - agent.transform.position.z
-            );
-    }
-
-    public void Attack(GameObject target)
-    {
-        switch (unitType)
-        {
-            case UnitType.GroundMelee:
-                this.GetComponent<Unit_GroundMelee>().attack(target);
-                break;
-
-            case UnitType.Air:
-                this.GetComponent<Unit_Air>().attack(target);
-                break;
-
-            case UnitType.GroundRanged:
-                this.GetComponent<Unit_GroundRanged>().attack(target);
-                break;
         }
     }
 }

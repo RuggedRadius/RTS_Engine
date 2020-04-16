@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitLifeBarWorld : MonoBehaviour
+public class UI_Input : MonoBehaviour
 {
+    [SerializeField] private GameObject panelDiplomacy;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,11 +15,9 @@ public class UnitLifeBarWorld : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    public void DisplayWorldLifeBar()
-    {
-
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            panelDiplomacy.SetActive(!panelDiplomacy.activeSelf);
+        }
     }
 }

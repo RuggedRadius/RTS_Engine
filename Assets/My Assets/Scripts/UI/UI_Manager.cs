@@ -33,8 +33,11 @@ public class UI_Manager : MonoBehaviour
 
     public List<GameObject> currentSelection;
 
+    public Vector2 screenSize;
+
     void Start()
     {
+        screenSize = new Vector2(Screen.width, Screen.height);
         currentSelection = new List<GameObject>();
         gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         sm = gm.GetComponentInChildren<SelectionManager>();
@@ -46,13 +49,25 @@ public class UI_Manager : MonoBehaviour
     private void Update()
     {
         GetUpdatedSelection();
+
+        MaintainScreenRatios();
+    }
+
+    private void MaintainScreenRatios()
+    {
+        if (screenSize.x != Screen.width || screenSize.y != Screen.height)
+        {
+            screenSize = new Vector2(Screen.width, Screen.height);
+            sizeMainPanels();
+            sizeInteractionSubPanels();
+        }
     }
 
     public void sizeMainPanels()
     {
         // Determine panel widths
         float heightTop = 30f;
-        float heightBottom = 200f;
+        float heightBottom = Screen.width * 0.1f;
         float heightMiddle = Screen.height - heightTop - heightBottom;
         
         // Apply sizes
@@ -93,14 +108,14 @@ public class UI_Manager : MonoBehaviour
         remainingWidth -= (4 * hlg.spacing);
 
         // Calculate panel widths based on remaining width
-        float informationPanelWidth = Mathf.Clamp(150f, 150f, parentWidth/2);
+        float informationPanelWidth = Mathf.Clamp(150f, 150f, parentWidth / 2);
         float selectionPanelWidth = Mathf.Clamp(remainingWidth * 0.35f, 200f, parentWidth / 2);
         float actionPanelWidth = Mathf.Clamp(275f, 275f, parentWidth / 2);
 
         // Apply sizes to panels
         compMinimap.sizeDelta = new Vector2(minimapPanelWidth, compMinimap.sizeDelta.y);
         comp3DMinimap.sizeDelta = new Vector2(minimap3DPanelWidth, comp3DMinimap.sizeDelta.y);
-        compInformation.sizeDelta = new Vector2(informationPanelWidth, compInformation.sizeDelta.y);
+        compInformation.sizeDelta = new Vector2(informationPanelWidth, panelBottom.sizeDelta.y - paddings[0] - paddings[2]);
         compSelection.sizeDelta = new Vector2(selectionPanelWidth, compSelection.sizeDelta.y);
         compAction.sizeDelta = new Vector2(actionPanelWidth, compAction.sizeDelta.y);
 
