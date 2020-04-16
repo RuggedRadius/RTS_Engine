@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class HotGroups : MonoBehaviour
 {
+    private GameManager gm;
+    private SelectionManager sm;
+
     UI_Manager uiManager;
 
     public GameObject[] hotGroup1;
@@ -14,6 +17,8 @@ public class HotGroups : MonoBehaviour
     private void Start()
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        sm = gm.GetComponentInChildren<SelectionManager>();
     }
 
     void Update()
@@ -22,37 +27,37 @@ public class HotGroups : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha1))
             {
-                hotGroup1 = new GameObject[SelectionManager.currentSelection.Count];
+                hotGroup1 = new GameObject[sm.currentSelection.Count];
                 for (int i = 0; i < hotGroup1.Length; i++)
                 {
-                    hotGroup1[i] = SelectionManager.currentSelection[i].gameObject;
+                    hotGroup1[i] = sm.currentSelection[i].gameObject;
                 }
                 //print("Hot Group 1 Set.");
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                hotGroup2 = new GameObject[SelectionManager.currentSelection.Count];
+                hotGroup2 = new GameObject[sm.currentSelection.Count];
                 for (int i = 0; i < hotGroup2.Length; i++)
                 {
-                    hotGroup2[i] = SelectionManager.currentSelection[i].gameObject;
+                    hotGroup2[i] = sm.currentSelection[i].gameObject;
                 }
                 //print("Hot Group 2 Set.");
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                hotGroup3 = new GameObject[SelectionManager.currentSelection.Count];
+                hotGroup3 = new GameObject[sm.currentSelection.Count];
                 for (int i = 0; i < hotGroup3.Length; i++)
                 {
-                    hotGroup3[i] = SelectionManager.currentSelection[i].gameObject;
+                    hotGroup3[i] = sm.currentSelection[i].gameObject;
                 }
                 //print("Hot Group 3 Set.");
             }
             if (Input.GetKeyDown(KeyCode.Alpha4))
             {
-                hotGroup4 = new GameObject[SelectionManager.currentSelection.Count];
+                hotGroup4 = new GameObject[sm.currentSelection.Count];
                 for (int i = 0; i < hotGroup4.Length; i++)
                 {
-                    hotGroup4[i] = SelectionManager.currentSelection[i].gameObject;
+                    hotGroup4[i] = sm.currentSelection[i].gameObject;
                 }
                 //print("Hot Group 4 Set.");
             }
@@ -63,10 +68,10 @@ public class HotGroups : MonoBehaviour
             {
                 if (hotGroup1.Length > 0)
                 {
-                    SelectionManager.currentSelection.Clear();
+                    sm.currentSelection.Clear();
                     foreach (GameObject selection in hotGroup1)
                     {
-                        SelectionManager.currentSelection.Add(selection);
+                        sm.currentSelection.Add(selection);
                     }
                 }
                 //print("Hot Group 1");
@@ -75,10 +80,10 @@ public class HotGroups : MonoBehaviour
             {
                 if (hotGroup2.Length > 0)
                 {
-                    SelectionManager.currentSelection.Clear();
+                    sm.currentSelection.Clear();
                     foreach (GameObject selection in hotGroup2)
                     {
-                        SelectionManager.currentSelection.Add(selection);
+                        sm.currentSelection.Add(selection);
                     }
                 }
                 //print("Hot Group 2");
@@ -87,10 +92,10 @@ public class HotGroups : MonoBehaviour
             {
                 if (hotGroup3.Length > 0)
                 {
-                    SelectionManager.currentSelection.Clear();
+                    sm.currentSelection.Clear();
                     foreach (GameObject selection in hotGroup3)
                     {
-                        SelectionManager.currentSelection.Add(selection);
+                        sm.currentSelection.Add(selection);
                     }
                 }
                 //print("Hot Group 3");
@@ -99,10 +104,10 @@ public class HotGroups : MonoBehaviour
             {
                 if (hotGroup4.Length > 0)
                 {
-                    SelectionManager.currentSelection.Clear();
+                    sm.currentSelection.Clear();
                     foreach (GameObject selection in hotGroup4)
                     {
-                        SelectionManager.currentSelection.Add(selection);
+                        sm.currentSelection.Add(selection);
                     }
                 }
                 //print("Hot Group 4");

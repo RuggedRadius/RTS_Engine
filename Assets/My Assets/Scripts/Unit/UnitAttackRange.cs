@@ -10,6 +10,9 @@ public class UnitAttackRange : MonoBehaviour
     [SerializeField]
     public List<GameObject> inRangeEnemies;
 
+    [SerializeField]
+    public LayerMask enemyScanLayer;
+
  
     private Unit unit;
 
@@ -22,50 +25,51 @@ public class UnitAttackRange : MonoBehaviour
         SphereCollider rangeSphere = this.gameObject.AddComponent<SphereCollider>();
         rangeSphere.isTrigger = true;
         rangeSphere.radius = range;
+
+        StartCoroutine(scanForEnemies());
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == 9)
-        {
-            // Something on units layer entered 
-            if (other.gameObject.GetComponent<Unit>() != null)
-            {
-                
-                // Unit entered
-                Unit enteringUnit = other.transform.GetComponent<Unit>();
 
-                if (enteringUnit != null)
+
+    public IEnumerator scanForEnemies()
+    {
+        RaycastHit hitScan;
+        Ray ray;
+        Vector3 rayOrigin;
+        Vector3 rayDirection;
+        int rayCount = 180;
+        while (unit.GetComponent<UnitLife>().alive)
+        {
+            inRangeEnemies.Clear();
+
+
+            for (int i = 0; i <= rayCount; i++)
+            {
+                rayOrigin = this.transform.position + Vector3.up;
+                rayDirection = Vector3.Lerp(-transform.right + transform.forward, transform.right + transform.forward, (float)i/(float)rayCount);
+                
+                ray = new Ray(rayOrigin, rayDirection);
+                //Debug.DrawRay(rayOrigin, rayDirection * range, Color.yellow, 1f);
+
+                if (Physics.Raycast(ray, out hitScan, range, enemyScanLayer, QueryTriggerInteraction.Ignore))
                 {
-                    if (enteringUnit.team != unit.team)
+                    // Unit hit
+                    if (hitScan.collider.gameObject.GetComponent<Unit>() != null)
                     {
-                        if (!inRangeEnemies.Contains(other.gameObject))
+                        Unit hitUnit = hitScan.collider.gameObject.GetComponent<Unit>();
+                        if (hitUnit.team != unit.team)
                         {
-                            // Enemy entered range
-                            inRangeEnemies.Add(other.gameObject);
+                            if (!inRangeEnemies.Contains(hitScan.collider.gameObject))
+                            {
+                                // Enemy Unit found
+                                inRangeEnemies.Add(hitUnit.gameObject);
+                            }
                         }
-                    }
-                    else
-                    {
-                        // Friendly unit entered range
                     }
                 }
             }
-            else
-            {
-                Debug.LogError("Couldnt find unit script");
-            }
-        }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.transform.root.GetComponent<Unit>() != null)
-        {
-            if (inRangeEnemies.Contains(other.gameObject))
-            {
-                inRangeEnemies.Remove(other.gameObject);
-            }
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }

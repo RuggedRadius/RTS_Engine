@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class UI_Manager : MonoBehaviour
 {
+    private GameManager gm;
+    private SelectionManager sm;
+
     public bool mouseOverUI;
 
     [Header("Panels")]
@@ -33,6 +36,8 @@ public class UI_Manager : MonoBehaviour
     void Start()
     {
         currentSelection = new List<GameObject>();
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        sm = gm.GetComponentInChildren<SelectionManager>();
 
         sizeMainPanels();
         sizeInteractionSubPanels();
@@ -152,9 +157,12 @@ public class UI_Manager : MonoBehaviour
         currentSelection.Clear();
 
         SelectionManager selManager = GameObject.FindGameObjectWithTag("Selection Manager").GetComponent<SelectionManager>();
-        foreach (dynamic d in SelectionManager.currentSelection)
+        foreach (dynamic d in sm.currentSelection)
         {
-            currentSelection.Add(d.gameObject);
+            if (d.gameObject != null)
+            {
+                currentSelection.Add(d.gameObject);
+            }
         }
     }
     // Event when screen changes size

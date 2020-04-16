@@ -11,6 +11,10 @@ using static Unit;
 [Serializable]
 public class Structure : MonoBehaviour, IUnitProducing
 {
+    private GameManager gm;
+    private SelectionManager sm;
+
+
     [SerializeField]
     public string structureName;
     [SerializeField]
@@ -30,6 +34,14 @@ public class Structure : MonoBehaviour, IUnitProducing
     [SerializeField]
     private Text productionText;
 
+    [SerializeField]
+    private Vector3 rallyPointLocation;
+    [SerializeField]
+    private GameObject rallyPointLocationPrefab;
+    private GameObject rallyPoint;
+
+    private Vector3 defaultSpawnLocation;
+
 
 
     public bool creatingUnit;
@@ -45,9 +57,70 @@ public class Structure : MonoBehaviour, IUnitProducing
         resourcesManager = GameObject.FindGameObjectWithTag("ResourceManager").GetComponent<ResourcesManager>();
         productionQueue = new Queue<Unit>();
         team = transform.root.GetComponent<TeamScript>().team;
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        sm = gm.GetComponentInChildren<SelectionManager>();
+    }
+
+    public void Start()
+    {
+        // Set default spawn location
+        defaultSpawnLocation = this.transform.position + (30 * -transform.forward);
+
+        // Check height at location
+        Ray ray = new Ray(defaultSpawnLocation + (100 * Vector3.up), Vector3.down);
+        if (Physics.Raycast(ray, out RaycastHit hit, 10000, 256, QueryTriggerInteraction.Ignore))
+        {
+            defaultSpawnLocation = new Vector3(
+                defaultSpawnLocation.x,
+                hit.point.y,
+                defaultSpawnLocation.z
+                );
+        }
+
+        // Set default rally point to spawn location
+        rallyPointLocation = defaultSpawnLocation;
     }
 
     void Update()
+    {
+        ProcessQueue();
+        DisplayRallyPoint();
+    }
+
+    public void UpdateRallyPoint(Vector3 worldPosition)
+    {
+        rallyPointLocation = worldPosition;
+        if (rallyPoint == null)
+        {
+            rallyPoint = Instantiate(rallyPointLocationPrefab);
+            rallyPoint.transform.SetParent(this.transform);
+        }
+        rallyPoint.transform.position = rallyPointLocation;
+    }
+
+    private void DisplayRallyPoint()
+    {
+        if (sm.currentSelection.Contains(this))
+        {
+            // Selected, show rally point
+            if (rallyPoint == null)
+            {
+                rallyPoint = Instantiate(rallyPointLocationPrefab);
+                rallyPoint.transform.SetParent(this.transform);
+                rallyPoint.transform.position = rallyPointLocation;
+            }
+        }
+        else
+        {
+            // Not selected, hide rally point
+            if (rallyPoint != null)
+            {
+                Destroy(rallyPoint);
+            }    
+        }
+    }
+
+    private void ProcessQueue()
     {
         // If queue contains units, produce them
         if (productionQueue.Count > 0)
@@ -134,13 +207,20 @@ public class Structure : MonoBehaviour, IUnitProducing
                 hit.point.y,
                 finalPosition.z
                 );
-            //print("Adjusted height for unit creation");
         }
 
+        // Place unit out front of structure
         newUnit.transform.position = finalPosition;
 
+        // Toggle NavMesh agent to initialise it to baked NavMesh
         newUnit.GetComponent<NavMeshAgent>().enabled = false;
         newUnit.GetComponent<NavMeshAgent>().enabled = true;
+
+        // Small pause to let unit intialise
+        yield return new WaitForSeconds(0.1f);
+
+        // Move to rally point
+        newUnit.GetComponent<Unit>().move(rallyPointLocation);
 
         // Stop FX
         Destroy(fx);

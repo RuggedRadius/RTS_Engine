@@ -13,6 +13,9 @@ public enum SelectableType
 
 public class Selectable : MonoBehaviour
 {
+    private GameManager gm;
+    private SelectionManager sm;
+
     [SerializeField]
     private SelectableType type;
 
@@ -35,6 +38,12 @@ public class Selectable : MonoBehaviour
         }
 
         return totalBounds;
+    }
+
+    private void Start()
+    {
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        sm = gm.GetComponentInChildren<SelectionManager>();
     }
 
     void OnEnable()
@@ -63,13 +72,13 @@ public class Selectable : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
                     // Multi-select
-                    SelectionManager.currentSelection.Add(this.GetComponent<Unit>());
+                    sm.currentSelection.Add(this.GetComponent<Unit>());
                 }
                 else
                 {
                     // Single select
-                    SelectionManager.currentSelection.Clear();
-                    SelectionManager.currentSelection.Add(this.GetComponent<Unit>());
+                    sm.currentSelection.Clear();
+                    sm.currentSelection.Add(this.GetComponent<Unit>());
                 }                
                 break;
 
@@ -77,13 +86,13 @@ public class Selectable : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
                     // Multi-select
-                    SelectionManager.currentSelection.Add(this.GetComponent<Structure>());
+                    sm.currentSelection.Add(this.GetComponent<Structure>());
                 }
                 else
                 {
                     // Single select
-                    SelectionManager.currentSelection.Clear();
-                    SelectionManager.currentSelection.Add(this.GetComponent<Structure>());
+                    sm.currentSelection.Clear();
+                    sm.currentSelection.Add(this.GetComponent<Structure>());
                 }
                 break;
         }

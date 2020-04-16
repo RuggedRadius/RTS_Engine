@@ -36,7 +36,7 @@ public class SelectionManager : MonoBehaviour
 
     // Cannot be serialised as they are static
     public static List<Selectable> selectables = new List<Selectable>();
-    public static List<dynamic> currentSelection = new List<dynamic>();
+    public List<dynamic> currentSelection = new List<dynamic>();
 
     [Header("Layers")]
     [SerializeField]
@@ -72,16 +72,55 @@ public class SelectionManager : MonoBehaviour
             }
             else
             {
+                // Mouse is not over UI
                 if (!sendingMoveOrder)
                 {
-                    // Mouse is not over UI
                     selectionStarted = true;
                     mousePosition1 = Input.mousePosition;
+
+
+                    //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    //Debug.DrawRay(ray.origin, ray.direction, Color.green, 3);
+                    //if (Physics.Raycast(ray, out RaycastHit hit))
+                    //{
+                    //    switch (hit.collider.gameObject.layer)
+                    //    {
+                    //        // Unit
+                    //        //case 9:
+                                
+                    //        //    if (hit.collider.gameObject.GetComponent<Unit>().team != Team.Team1)
+                    //        //    {
+                    //        //        print("clicked an enemy unit");
+                    //        //        // Enemy unit
+                    //        //        currentSelection.Clear();
+                    //        //        AddUnitToSelection(hit.collider.gameObject.GetComponent<Unit>());
+                    //        //    }
+                    //        //    else
+                    //        //    {
+                    //        //        print("clicked a friendly unit");
+                    //        //        // Friendly unit
+                    //        //        currentSelection.Clear();
+                    //        //        AddUnitToSelection(hit.collider.gameObject.GetComponent<Unit>());
+                    //        //    }
+                    //        //    break;
+
+                    //        default:
+                    //            selectionStarted = true;
+                    //            mousePosition1 = Input.mousePosition;
+                    //            break;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    selectionStarted = true;
+                    //    mousePosition1 = Input.mousePosition;
+                    //}
                 }
                 else
                 {
+                    // Complete move order
+
                     // Determine world position based on mouse position
-                    //Ray ray = Camera.main.ViewportPointToRay(Input.mousePosition);
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     Debug.DrawLine(ray.origin, ray.direction * 10000f, Color.red, 1f);
                     if (Physics.Raycast(ray, out RaycastHit hit, 10000f, terrainSearchLayer, QueryTriggerInteraction.Ignore))
@@ -99,38 +138,11 @@ public class SelectionManager : MonoBehaviour
                 }
             }
         }
+
         // End selection
         if (Input.GetMouseButtonUp(0))
         {
             selectionStarted = false;
-
-            uiManager.currentSelection.Clear();
-            if (currentSelection.Count > 0) 
-            {
-                if (currentSelection[0].GetComponent<Unit>() != null)
-                {
-                    //RemoveStructuresFromSelections();
-
-                    foreach (dynamic unit in currentSelection)
-                    {
-                        if (unit.GetComponent<Unit>() != null)
-                        {
-                            uiManager.currentSelection.Add(unit.gameObject);
-                        }
-                    }
-                }
-                else if (currentSelection[0].GetComponent<Structure>() != null)
-                {
-                    foreach (dynamic structure in currentSelection)
-                    {
-                        if (structure.GetComponent<Structure>() != null)
-                        {
-                            uiManager.currentSelection.Add(structure.gameObject);
-                        }
-                    }
-                }
-            }
-
             uiManager.UpdateUI();
         }
 
@@ -162,47 +174,111 @@ public class SelectionManager : MonoBehaviour
                     // Units 
                     if (selectables[i].gameObject.GetComponent<Unit>() != null)
                     {
-                        RemoveStructuresFromSelections();
 
-                        // Ground Melee       
-                        if (selectables[i].gameObject.GetComponent<Unit_GroundMelee>() != null)
+                        // CHANGE THIS ONCE DIPLOMACY IS IMPLEMENTED!!!!!!!!!!!!!!!!!!!!!!!!
+
+                        // IF ENEMY
+                        if (selectables[i].gameObject.GetComponent<Unit>().team != GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().playerTeam)
                         {
-                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_GroundMelee>());
+                            
+                            //if (currentSelection.Count == 0)
+                            //{
+                            //    print("adding enemy to empty selection");
+
+                            //    // Add unit to selection
+                            //    RemoveStructuresFromSelections();
+
+                            //    // Ground Melee       
+                            //    if (selectables[i].gameObject.GetComponent<Unit_GroundMelee>() != null)
+                            //    {
+                            //        AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_GroundMelee>());
+                            //    }
+
+                            //    // Ground Ranged      
+                            //    if (selectables[i].gameObject.GetComponent<Unit_GroundRanged>() != null)
+                            //    {
+                            //        AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_GroundRanged>());
+                            //    }
+
+                            //    // Air       
+                            //    if (selectables[i].gameObject.GetComponent<Unit_Air>() != null)
+                            //    {
+                            //        AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_Air>());
+                            //    }
+
+                            //    // Air Transport      
+                            //    if (selectables[i].gameObject.GetComponent<Unit_Air>() != null)
+                            //    {
+                            //        AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_Air>());
+                            //    }
+                            //}
+                            //else
+                            //{
+                            //    // If current selection contains enemy units already..
+                            //    if (currentSelection[0].GetComponent<Unit>().team != GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().playerTeam)
+                            //    {
+                            //        print("adding enemy to enemies selection");
+
+                            //        // Add unit to selection
+                            //        RemoveStructuresFromSelections();
+
+                            //        // Ground Melee       
+                            //        if (selectables[i].gameObject.GetComponent<Unit_GroundMelee>() != null)
+                            //        {
+                            //            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_GroundMelee>());
+                            //        }
+
+                            //        // Ground Ranged      
+                            //        if (selectables[i].gameObject.GetComponent<Unit_GroundRanged>() != null)
+                            //        {
+                            //            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_GroundRanged>());
+                            //        }
+
+                            //        // Air       
+                            //        if (selectables[i].gameObject.GetComponent<Unit_Air>() != null)
+                            //        {
+                            //            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_Air>());
+                            //        }
+
+                            //        // Air Transport      
+                            //        if (selectables[i].gameObject.GetComponent<Unit_Air>() != null)
+                            //        {
+                            //            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_Air>());
+                            //        }
+                            //    }
+                            //    else
+                            //    {
+                            //        // Current selection already contains friendly units, ignoring enemy unit selection
+                            //    }
+                            //}
                         }
-
-                        // Ground Ranged      
-                        if (selectables[i].gameObject.GetComponent<Unit_GroundRanged>() != null)
+                        // IF FRIENDLY UNIT
+                        else
                         {
-                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_GroundRanged>());
-                        }
+                            print("Clicked frinedly unit");
 
-                        // Air       
-                        if (selectables[i].gameObject.GetComponent<Unit_Air>() != null)
-                        {
-                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_Air>());
-                        }
+                            // Add unit to selection
+                            RemoveStructuresFromSelections();
 
-                        // Air Transport      
-                        if (selectables[i].gameObject.GetComponent<Unit_Air>() != null)
-                        {
-                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit_Air>());
+                            // Attempt to add unit
+                            AddUnitToSelection(selectables[i].gameObject.GetComponent<Unit>());
                         }
                     }
-
                 }
             }
         }
+
         // If right click
         if (Input.GetMouseButtonDown(1))
         {
-            // If at leats one unit selected
+            // If at least one unit/structure selected
             if (currentSelection.Count > 0)
             {
-                // Look for enemy units
-                
                 // Determine world position based on mouse position
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Debug.DrawLine(ray.origin, ray.direction * 10000f, Color.red, 1f);
+
+                // Look for units
                 if (Physics.Raycast(ray, out RaycastHit hitEnemy, 10000f, unitSearchLayer, QueryTriggerInteraction.Ignore))
                 {
                     //print("hit on enemy layer");
@@ -227,36 +303,80 @@ public class SelectionManager : MonoBehaviour
                     }
                 }
 
-                    // Look for terain
-                    // Cast ray to terrain from mouse
-                    //targetRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                //print("terrainSeekingRayLayer = " + terrainSeekingRayLayer.value.ToString());
+                // Look for terain
                 else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hitTerrain, 10000, terrainSeekingRayLayer, QueryTriggerInteraction.Ignore))
                 {
-                    //print(hit.collider.name);
                     // If hit terrain
                     if (hitTerrain.collider.gameObject.layer == 8)
                     {
-                        // Set location at hit point
-                        lastTargetLocation = hitTerrain.point;
+                        if (currentSelection[0].GetComponent<Structure>() != null)
+                        {
+                            // Structure(s) selected
+                            currentSelection[0].GetComponent<Structure>().UpdateRallyPoint(hitTerrain.point);
+                        }
+                        else
+                        {
+                            // Unit(s) selected
 
-                        // Move selected unit(s) to location
-                        moveSelectedUnitsTo(lastTargetLocation);
+                            // Set location at hit point
+                            lastTargetLocation = hitTerrain.point;
 
-                        // Add fx to location
-                        createTargetMarker(lastTargetLocation);
+                            // Move selected unit(s) to location
+                            moveSelectedUnitsTo(lastTargetLocation);
+
+                            // Add fx to location
+                            createTargetMarker(lastTargetLocation);
+                        }
                     }
                 }
             }
         }
     }
-    private void AddUnitToSelection(dynamic unit)
+    private void AddUnitToSelection(Unit unit)
     {
-        // Check current selection count is under maximum
-        if (currentSelection.Count < 24)
+        // Ground Melee       
+        if (unit.gameObject.GetComponent<Unit_GroundMelee>() != null)
         {
-            // Add unit
-            currentSelection.Add(unit);
+            // Check current selection count is under maximum
+            if (currentSelection.Count < 24)
+            {
+                // Add unit
+                currentSelection.Add(unit.gameObject.GetComponent<Unit_GroundMelee>());
+            }
+        }
+        // Ground Ranged      
+        else if (unit.gameObject.GetComponent<Unit_GroundRanged>() != null)
+        {
+            // Check current selection count is under maximum
+            if (currentSelection.Count < 24)
+            {
+                // Add unit
+                currentSelection.Add(unit.gameObject.GetComponent<Unit_GroundMelee>());
+            }
+        }
+        // Air       
+        else if (unit.gameObject.GetComponent<Unit_Air>() != null)
+        {
+            // Check current selection count is under maximum
+            if (currentSelection.Count < 24)
+            {
+                // Add unit
+                currentSelection.Add(unit.gameObject.GetComponent<Unit_GroundMelee>());
+            }
+        }
+        // Air Transport      
+        else if (unit.gameObject.GetComponent<Unit_Air>() != null)
+        {
+            // Check current selection count is under maximum
+            if (currentSelection.Count < 24)
+            {
+                // Add unit
+                currentSelection.Add(unit.gameObject.GetComponent<Unit_GroundMelee>());
+            }
+        }
+        else
+        {
+            Debug.LogError("Unit not added to selection as its type was not determined.");
         }
     }
 

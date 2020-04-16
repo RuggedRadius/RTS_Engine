@@ -93,10 +93,7 @@ public class Unit : MonoBehaviour, IMovable
 
     private void Update()
     {
-        if (moving)
-        {
 
-        }
     }
     #endregion
 

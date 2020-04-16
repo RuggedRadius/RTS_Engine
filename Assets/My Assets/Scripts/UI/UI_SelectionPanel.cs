@@ -10,6 +10,8 @@ public class UI_SelectionPanel : MonoBehaviour
     private UI_Manager uiManager;
     public List<GameObject> currentSelection;
     public List<GameObject> currentStructureQueue;
+    private GameManager gm;
+    private SelectionManager sm;
     #endregion
 
     #region MonoBehaviour
@@ -17,12 +19,14 @@ public class UI_SelectionPanel : MonoBehaviour
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
         currentSelection = new List<GameObject>();
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        sm = gm.GetComponentInChildren<SelectionManager>();
     }
     private void Update()
     {
-        if (SelectionManager.currentSelection.Count == 1)
+        if (sm.currentSelection.Count == 1)
         {
-            if (SelectionManager.currentSelection[0].GetComponent<Structure>() != null)
+            if (sm.currentSelection[0].GetComponent<Structure>() != null)
             {
                 PopulateCurrentStructureQueue();
             }
@@ -38,14 +42,14 @@ public class UI_SelectionPanel : MonoBehaviour
         ClearSelectionPanel();
 
         // Prioritise unit selection over buildings
-        if (SelectionManager.currentSelection.Count > 0)
+        if (sm.currentSelection.Count > 0)
         {
-            if (SelectionManager.currentSelection[0].gameObject.GetComponent<Unit>() != null)
+            if (sm.currentSelection[0].gameObject.GetComponent<Unit>() != null)
             {
                 //print("Displaying units");
                 DisplayUnits();
             }
-            else if (SelectionManager.currentSelection[0].gameObject.GetComponent<Structure>() != null)
+            else if (sm.currentSelection[0].gameObject.GetComponent<Structure>() != null)
             {
                 //print("Displaying structures");
                 DisplayStructures();
@@ -65,7 +69,7 @@ public class UI_SelectionPanel : MonoBehaviour
     {
         ClearCurrentStructureQueue();
 
-        foreach (Unit unit in SelectionManager.currentSelection[0].productionQueue)
+        foreach (Unit unit in sm.currentSelection[0].productionQueue)
         {
             // Display to UI
             GameObject go = uiManager.gameObject.GetComponent<UI_Utilities>().createTile(unit);
@@ -85,13 +89,13 @@ public class UI_SelectionPanel : MonoBehaviour
                                             {
         currentSelection.Clear();
 
-        if (SelectionManager.currentSelection.Count == 1)
+        if (sm.currentSelection.Count == 1)
         {
             PopulateCurrentStructureQueue();
         }
         else
         {
-            foreach (dynamic _structure in SelectionManager.currentSelection)
+            foreach (dynamic _structure in sm.currentSelection)
             {    
                 if (_structure.GetComponent<Structure>() != null)
                 {
@@ -103,9 +107,9 @@ public class UI_SelectionPanel : MonoBehaviour
 
                     // Add event handlers to button
                     go.GetComponent<Button>().onClick.AddListener(delegate () {
-                        SelectionManager.currentSelection.Clear();
-                        SelectionManager.currentSelection.Clear();
-                        SelectionManager.currentSelection.Add((Structure)_structure);
+                        sm.currentSelection.Clear();
+                        sm.currentSelection.Clear();
+                        sm.currentSelection.Add((Structure)_structure);
                         updateUITiles();
                     });
                 }
@@ -116,13 +120,13 @@ public class UI_SelectionPanel : MonoBehaviour
     {
         currentSelection.Clear();
 
-        foreach (dynamic unit in SelectionManager.currentSelection)
+        foreach (dynamic unit in sm.currentSelection)
         {
             if (unit.GetComponent<Unit>() != null)
             {
                 // Determine if single or multiple display
                 bool multiple;
-                if (SelectionManager.currentSelection.Count > 1)
+                if (sm.currentSelection.Count > 1)
                     multiple = true;
                 else
                     multiple = false;
@@ -133,8 +137,8 @@ public class UI_SelectionPanel : MonoBehaviour
                 // Add event handlers to button
                 go.GetComponent<Button>().onClick.AddListener(delegate ()
                 {
-                    SelectionManager.currentSelection.Clear();
-                    SelectionManager.currentSelection.Add(unit);
+                    sm.currentSelection.Clear();
+                    sm.currentSelection.Add(unit);
                     updateUITiles();
                 });
 
@@ -147,7 +151,7 @@ public class UI_SelectionPanel : MonoBehaviour
                     // Display Unit Procedure HERE...
 
                     // Actions
-                    uiManager.panelAction.DisplayUnitActions((Unit)SelectionManager.currentSelection[0].GetComponent<Unit>());
+                    uiManager.panelAction.DisplayUnitActions((Unit)sm.currentSelection[0].GetComponent<Unit>());
 
                     // Information
                     uiManager.panelInformation.UpdateTextInformation((Unit)unit.GetComponent<Unit>());
