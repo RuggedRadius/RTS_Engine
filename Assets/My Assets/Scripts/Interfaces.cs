@@ -25,7 +25,7 @@ public class Interfaces
     public interface IAttacking
     {
         void attack(GameObject target);
-        void attack(Vector3 position);
+        //void attack(Vector3 position);
         void stopAttack();
     }
 

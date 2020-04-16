@@ -9,6 +9,11 @@ public class Unit_GroundMelee : MonoBehaviour, IMovable, IAttacking
     [SerializeField]
     Unit unit;
 
+    private void Start()
+    {
+        unit = this.GetComponent<Unit>();
+    }
+
     public void move(Vector3 destination)
     {
         unit.agent.SetDestination(destination);
@@ -21,6 +26,9 @@ public class Unit_GroundMelee : MonoBehaviour, IMovable, IAttacking
 
     public void attack(GameObject target)
     {
+        print("Attacking " + target.name);
+
+        this.transform.LookAt(target.transform);
 
     }
 

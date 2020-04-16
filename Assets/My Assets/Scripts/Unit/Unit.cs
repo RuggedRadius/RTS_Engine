@@ -170,4 +170,22 @@ public class Unit : MonoBehaviour, IMovable
             _destination.z - agent.transform.position.z
             );
     }
+
+    public void Attack(GameObject target)
+    {
+        switch (unitType)
+        {
+            case UnitType.GroundMelee:
+                this.GetComponent<Unit_GroundMelee>().attack(target);
+                break;
+
+            case UnitType.Air:
+                this.GetComponent<Unit_Air>().attack(target);
+                break;
+
+            case UnitType.GroundRanged:
+                this.GetComponent<Unit_GroundRanged>().attack(target);
+                break;
+        }
+    }
 }

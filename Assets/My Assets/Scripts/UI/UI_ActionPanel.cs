@@ -9,6 +9,7 @@ public class UI_ActionPanel : MonoBehaviour
 {
     private UI_Manager uiManager;
     private UI_Utilities uiUtils;
+    private SelectionManager selectionManager;
 
     public List<GameObject> currentActionTiles;
 
@@ -17,6 +18,7 @@ public class UI_ActionPanel : MonoBehaviour
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
         uiUtils = uiManager.GetComponent<UI_Utilities>();
+        selectionManager = GameObject.FindGameObjectWithTag("Selection Manager").GetComponent<SelectionManager>();
         currentActionTiles = new List<GameObject>();
     }
 
@@ -40,7 +42,7 @@ public class UI_ActionPanel : MonoBehaviour
                     // Button event
                     newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate () {
                         // Action
-                        unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
+                        //unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
                     });
                 }
                 if (unit is IMovable)
@@ -58,7 +60,9 @@ public class UI_ActionPanel : MonoBehaviour
                     newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
                     {
                         // Move Player to next valid click or cancel
-                        // ...
+                        print("Move unit clicked");
+                        Debug.Log("Move unit clicked");
+                        selectionManager.sendingMoveOrder = true;
                     });
 
                     // STOP:
@@ -113,7 +117,7 @@ public class UI_ActionPanel : MonoBehaviour
                         switch (unit.unitType)
                         {
                             case UnitType.GroundRanged:
-                                unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
+                                //unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
                                 break;
 
                             case UnitType.GroundMelee:
@@ -147,6 +151,10 @@ public class UI_ActionPanel : MonoBehaviour
                     {
                         // Move Player to next valid click or cancel
                         // ...
+                        // Move Player to next valid click or cancel
+                        print("Move unit clicked");
+                        Debug.Log("Move unit clicked");
+                        selectionManager.sendingMoveOrder = true;
                     });
 
                     // STOP:
@@ -201,7 +209,7 @@ public class UI_ActionPanel : MonoBehaviour
                         switch (unit.unitType)
                         {
                             case UnitType.GroundRanged:
-                                unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
+                                //unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
                                 break;
 
                             case UnitType.GroundMelee:
@@ -235,6 +243,10 @@ public class UI_ActionPanel : MonoBehaviour
                     {
                         // Move Player to next valid click or cancel
                         // ...
+                        // Move Player to next valid click or cancel
+                        print("Move unit clicked");
+                        Debug.Log("Move unit clicked");
+                        selectionManager.sendingMoveOrder = true;
                     });
 
                     // STOP:
@@ -271,134 +283,7 @@ public class UI_ActionPanel : MonoBehaviour
                     });
                 }
                 break;
-
-            case UnitType.AirTransport:
-                if (unit is IAttacking)
-                {
-                    // Create tile
-                    Action newAction = new Action(
-                        "Attack",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Attack
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate () {
-                        // Action
-                        switch (unit.unitType)
-                        {
-                            case UnitType.GroundRanged:
-                                unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.GroundMelee:
-                                unit.GetComponent<Unit_GroundMelee>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.Air:
-                                unit.GetComponent<Unit_Air>().attack(unit.transform.position);
-                                break;
-
-                            case UnitType.AirTransport:
-                                unit.GetComponent<Unit_Air>().attack(unit.transform.position);
-                                break;
-
-                        }
-                    });
-                }
-                if (unit is IMovable)
-                {
-                    // MOVE:
-                    // Create tile
-                    Action newAction = new Action(
-                        "Move",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Move
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Move Player to next valid click or cancel
-                        // ...
-                    });
-
-                    // STOP:
-                    // Create tile
-                    newAction = new Action(
-                        "Stop",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_Stop
-                        );
-                    newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Action
-                        unit.stopMoving();
-                    });
-                }
-                if (unit is IMovable && unit is IAttacking)
-                {
-                    // Create tile
-                    Action newAction = new Action(
-                        "Attack Move",
-                        uiManager.GetComponent<UI_TileManager>().UI_Action_AttackMove
-                        );
-                    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-                    currentActionTiles.Add(newProducableUnitTile);
-
-                    // Button event
-                    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate ()
-                    {
-                        // Action
-                        // ...
-                    });
-                }
-                break;
-
         }
-
-        //if (unit is IAttacking)
-        //{
-        //    // Create tile
-        //    Action newAction = new Action(
-        //        "Attack",
-        //        uiManager.GetComponent<UI_TileManager>().UI_Action_Attack
-        //        );
-        //    GameObject newProducableUnitTile = uiUtils.createTile(newAction);
-        //    currentActionTiles.Add(newProducableUnitTile);
-
-        //    // Button event
-        //    newProducableUnitTile.GetComponent<Button>().onClick.AddListener(delegate () {
-        //        // Action
-        //        switch (unit.unitType)
-        //        {
-        //            case UnitType.GroundRanged:
-        //                unit.GetComponent<Unit_GroundRanged>().attack(unit.transform.position);
-        //                break;
-
-        //            case UnitType.GroundMelee:
-        //                unit.GetComponent<Unit_GroundMelee>().attack(unit.transform.position);
-        //                break;
-
-        //            case UnitType.Air:
-        //                unit.GetComponent<Unit_Air>().attack(unit.transform.position);
-        //                break;
-
-        //            case UnitType.AirTransport:
-        //                unit.GetComponent<Unit_Air>().attack(unit.transform.position);
-        //                break;
-
-        //        }
-        //    });
-        //}
-
-
-
     }
 
     public void DisplayStructureActions(Structure structure)

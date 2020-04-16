@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public UI_Manager uiManager;
 
+    public Team playerTeam;
+
     
 
     void Start()

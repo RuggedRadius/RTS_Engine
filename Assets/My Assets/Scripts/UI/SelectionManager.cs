@@ -31,6 +31,8 @@ public class SelectionManager : MonoBehaviour
 
     bool selectionStarted = false;
     Vector3 mousePosition1;
+    public LayerMask terrainSearchLayer;
+    public LayerMask unitSearchLayer;
 
     // Cannot be serialised as they are static
     public static List<Selectable> selectables = new List<Selectable>();
@@ -56,20 +58,45 @@ public class SelectionManager : MonoBehaviour
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UI_Manager>();
         cam = Camera.main;
     }
+
+    public bool sendingMoveOrder;
     void Update()
     {
         // Begin selection
         if (Input.GetMouseButtonDown(0))
         {
+
             if (isMouseOverUI())
             {
                 // Mouse is over UI
             }
             else
             {
-                // Mouse is not over UI
-                selectionStarted = true;
-                mousePosition1 = Input.mousePosition;
+                if (!sendingMoveOrder)
+                {
+                    // Mouse is not over UI
+                    selectionStarted = true;
+                    mousePosition1 = Input.mousePosition;
+                }
+                else
+                {
+                    // Determine world position based on mouse position
+                    //Ray ray = Camera.main.ViewportPointToRay(Input.mousePosition);
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    Debug.DrawLine(ray.origin, ray.direction * 10000f, Color.red, 1f);
+                    if (Physics.Raycast(ray, out RaycastHit hit, 10000f, terrainSearchLayer, QueryTriggerInteraction.Ignore))
+                    {
+                        print(hit.collider.name);
+                        print("Sending unit to " + hit.point);
+                        moveSelectedUnitsTo(hit.point);
+                        sendingMoveOrder = false;
+                    }
+                    else
+                    {
+                        print("Didnt hit terrain with mouse order mouse click");
+                        
+                    }
+                }
             }
         }
         // End selection
@@ -171,17 +198,47 @@ public class SelectionManager : MonoBehaviour
             // If at leats one unit selected
             if (currentSelection.Count > 0)
             {
-                // Cast ray to terrain from mouse
-                targetRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                // Look for enemy units
+                
+                // Determine world position based on mouse position
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Debug.DrawLine(ray.origin, ray.direction * 10000f, Color.red, 1f);
+                if (Physics.Raycast(ray, out RaycastHit hitEnemy, 10000f, unitSearchLayer, QueryTriggerInteraction.Ignore))
+                {
+                    //print("hit on enemy layer");
+                    // Hit something
+                    if (hitEnemy.collider.GetComponent<Unit>() != null)
+                    {
+                        // hit a unit
+                        if (hitEnemy.collider.GetComponent<Unit>().team != GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().playerTeam)
+                        {
+                            // Enemy
+                            CurrentSelectionAttack(hitEnemy.collider.gameObject);
+
+                        }
+                        else
+                        {
+                            // Friendly Unit
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Raycast hit unit layer but couldn't find Unit script");
+                    }
+                }
+
+                    // Look for terain
+                    // Cast ray to terrain from mouse
+                    //targetRay = Camera.main.ScreenPointToRay(Input.mousePosition);
                 //print("terrainSeekingRayLayer = " + terrainSeekingRayLayer.value.ToString());
-                if (Physics.Raycast(targetRay, out RaycastHit hit, 10000, terrainSeekingRayLayer, QueryTriggerInteraction.Ignore))
+                else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hitTerrain, 10000, terrainSeekingRayLayer, QueryTriggerInteraction.Ignore))
                 {
                     //print(hit.collider.name);
                     // If hit terrain
-                    if (hit.collider.gameObject.layer == 8)
+                    if (hitTerrain.collider.gameObject.layer == 8)
                     {
                         // Set location at hit point
-                        lastTargetLocation = hit.point;
+                        lastTargetLocation = hitTerrain.point;
 
                         // Move selected unit(s) to location
                         moveSelectedUnitsTo(lastTargetLocation);
@@ -215,6 +272,16 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
+    private void CurrentSelectionAttack(GameObject target)
+    {
+        foreach (dynamic d in currentSelection)
+        {
+            if (d.GetComponent<Unit>() != null)
+            {
+                d.GetComponent<Unit>().Attack(target);
+            }
+        }
+    }
 
     void OnGUI()
     {

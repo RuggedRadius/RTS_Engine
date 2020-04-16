@@ -28,31 +28,32 @@ public class UnitAttackRange : MonoBehaviour
     {
         if (other.gameObject.layer == 9)
         {
-            // Something on units layer entered
-            print(other.gameObject.name);
-
-            GameObject collider = other.gameObject;
-            Unit unit = null;
-            while (unit == null && collider.transform.parent != null)
+            // Something on units layer entered 
+            if (other.gameObject.GetComponent<Unit>() != null)
             {
-                collider = collider.transform.parent.gameObject;
-                unit = collider.GetComponent<Unit>();
-            }
-            
-            if (collider.GetComponent<Unit>() != null)
-            {
+                
                 // Unit entered
-                Unit enteringUnit = other.transform.parent.GetComponent<Unit>();
+                Unit enteringUnit = other.transform.GetComponent<Unit>();
 
-                if (enteringUnit.team != unit.team)
+                if (enteringUnit != null)
                 {
-                    // Enemy entered range
-                    inRangeEnemies.Add(other.gameObject);
+                    if (enteringUnit.team != unit.team)
+                    {
+                        if (!inRangeEnemies.Contains(other.gameObject))
+                        {
+                            // Enemy entered range
+                            inRangeEnemies.Add(other.gameObject);
+                        }
+                    }
+                    else
+                    {
+                        // Friendly unit entered range
+                    }
                 }
             }
             else
             {
-                print("Couldnt find unit script");
+                Debug.LogError("Couldnt find unit script");
             }
         }
     }

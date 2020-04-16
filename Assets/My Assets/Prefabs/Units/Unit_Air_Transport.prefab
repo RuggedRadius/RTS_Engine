@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6263856575671637914}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5070484001836685783}
   - component: {fileID: 3494703789034784993}
   - component: {fileID: 4397632485986531684}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 3962446925278705981}
   - component: {fileID: 154354415077013156}
   - component: {fileID: 4387923460700393079}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Unit_Air_Transport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,6 +228,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Air unit
+  unitType: 0
+  team: 0
   unitSpeed: 7
   unitBaseDamage: 5
   unitBuildTime: 2
@@ -249,6 +251,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   unitLife: {fileID: 0}
   destinationTolerance: 1
+  agent: {fileID: 0}
 --- !u!114 &154354415077013156
 MonoBehaviour:
   m_ObjectHideFlags: 0
