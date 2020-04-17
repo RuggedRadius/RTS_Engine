@@ -31,6 +31,7 @@ public class HotGroups : MonoBehaviour
                 for (int i = 0; i < hotGroup1.Length; i++)
                 {
                     hotGroup1[i] = sm.currentSelection[i].gameObject;
+                    
                 }
                 //print("Hot Group 1 Set.");
             }
@@ -73,6 +74,9 @@ public class HotGroups : MonoBehaviour
                     {
                         sm.currentSelection.Add(selection);
                     }
+
+                    uiManager.GetUpdatedSelection();
+                    uiManager.UpdateUI();
                 }
                 //print("Hot Group 1");
             }
@@ -85,6 +89,9 @@ public class HotGroups : MonoBehaviour
                     {
                         sm.currentSelection.Add(selection);
                     }
+
+                    uiManager.GetUpdatedSelection();
+                    uiManager.UpdateUI();
                 }
                 //print("Hot Group 2");
             }
@@ -97,6 +104,9 @@ public class HotGroups : MonoBehaviour
                     {
                         sm.currentSelection.Add(selection);
                     }
+
+                    uiManager.GetUpdatedSelection();
+                    uiManager.UpdateUI();
                 }
                 //print("Hot Group 3");
             }
@@ -109,6 +119,9 @@ public class HotGroups : MonoBehaviour
                     {
                         sm.currentSelection.Add(selection);
                     }
+
+                    uiManager.GetUpdatedSelection();
+                    uiManager.UpdateUI();
                 }
                 //print("Hot Group 4");
             }

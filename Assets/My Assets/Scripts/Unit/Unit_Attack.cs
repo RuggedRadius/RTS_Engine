@@ -1,24 +1,42 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
+public enum AttackState
+{
+    Passive,
+    Agressive
+}
 
 public class Unit_Attack : MonoBehaviour
 {
+    [Header("Range")]
     [SerializeField]
     private float range;
-
     [SerializeField]
-    public List<GameObject> inRangeEnemies;
-
+    public List<GameObject> inRange;
     [SerializeField]
     public LayerMask enemyScanLayer;
 
- 
+    [Header("State")]
+    [SerializeField]
+    private AttackState state;
+    public bool attacking;
+    public bool attackMoving;
+
+    //[Space(20)]
+    [Header("Unit Specifics - Ranged")]
+    public GameObject muzzleFlashPrefab;
+    public Transform muzzleFlashLocation;
+
     private Unit unit;
+    private NavMeshAgent agent;
 
     private void Awake()
     {
         unit = this.GetComponent<Unit>();
+        agent = this.GetComponent<NavMeshAgent>();
     }
 
     void Start()
@@ -35,7 +53,7 @@ public class Unit_Attack : MonoBehaviour
         int rayCount = 180;
         while (unit.life.alive)
         {
-            inRangeEnemies.Clear();
+            inRange.Clear();
 
 
             for (int i = 0; i <= rayCount; i++)
@@ -54,10 +72,10 @@ public class Unit_Attack : MonoBehaviour
                         Unit hitUnit = hitScan.collider.gameObject.GetComponent<Unit>();
                         if (hitUnit.team != unit.team)
                         {
-                            if (!inRangeEnemies.Contains(hitScan.collider.gameObject))
+                            if (!inRange.Contains(hitScan.collider.gameObject))
                             {
                                 // Enemy Unit found
-                                inRangeEnemies.Add(hitUnit.gameObject);
+                                inRange.Add(hitUnit.gameObject);
                             }
                         }
                     }
@@ -67,16 +85,8 @@ public class Unit_Attack : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
-
-    public void attack(GameObject target)
-    {
-        StopAllCoroutines();
-        StartCoroutine(scanForEnemies());
-        StartCoroutine(attackUnitRoutine(target));
-    }
-
-    public bool attacking;
-    public IEnumerator attackUnitRoutine(GameObject target)
+    
+    public IEnumerator attackRoutine(GameObject target)
     {
         Unit targetUnit = target.GetComponent<Unit>();
 
@@ -95,7 +105,7 @@ public class Unit_Attack : MonoBehaviour
                     // Look at target
                     this.transform.LookAt(target.transform);
 
-                    if (inRangeEnemies.Contains(target))
+                    if (inRange.Contains(target))
                     {
                         //print("Target in range, attacking: " + target.name);
 
@@ -105,6 +115,15 @@ public class Unit_Attack : MonoBehaviour
                         // SFX
                         // ...
 
+                        // UnitType specifics
+                        switch (unit.unitType)
+                        {
+                            case UnitType.GroundRanged:
+                                CreateMuzzleFlash();
+                                break;
+                        }
+                        
+
                         // Target take damage
                         targetLife.TakeDamage((int)unit.stats.unitBaseDamage);
 
@@ -112,7 +131,7 @@ public class Unit_Attack : MonoBehaviour
                     }
                     else
                     {
-                        while (attacking && !inRangeEnemies.Contains(target))
+                        while (attacking && !inRange.Contains(target))
                         {
                             //print("Moving to target");
 
@@ -150,14 +169,66 @@ public class Unit_Attack : MonoBehaviour
         //print("Coroutine complete");
         yield return null;
     }
+    public IEnumerator attackRoutine(Vector3 worldPosition)
+    {
+        state = AttackState.Agressive;
+        attackMoving = true;
 
+        while (attackMoving && transform.position != agent.destination)
+        {
+            // Move to destination
+            unit.movement.move(worldPosition);
+            
+            // Something enemy in range
+            if (inRange.Count > 0)
+            {
+                // Attack it
+                CreateMuzzleFlash();
+                attack(inRange[0]);
+
+                // Proceed with attack move
+                unit.movement.move(worldPosition);
+            } 
+
+            if (transform.position != agent.destination)
+            {
+                print("Attack Moving");
+                attackMoving = true;
+            }
+            else
+            {
+                print("Reached destination of Attack Move");
+                attackMoving = false;
+            }
+        }
+        yield return null;
+    }
+
+
+
+    public void attack(GameObject target)
+    {
+        //StopAllCoroutines();
+        //StartCoroutine(scanForEnemies());
+        StartCoroutine(attackRoutine(target));
+
+
+    }
     public void attack(Vector3 position)
     {
-
+        StartCoroutine(attackRoutine(position));
     }
 
     public void stopAttack()
     {
 
     }
+
+
+    // Ranged Unit Methods
+    private void CreateMuzzleFlash()
+    {
+        Instantiate(muzzleFlashPrefab, muzzleFlashLocation.position, Quaternion.Euler(Vector3.zero), this.transform);
+    }
+
 }

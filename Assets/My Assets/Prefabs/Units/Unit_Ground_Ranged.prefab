@@ -995,11 +995,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 100
-  inRangeEnemies: []
+  inRange: []
   enemyScanLayer:
     serializedVersion: 2
     m_Bits: 512
+  state: 0
   attacking: 0
+  attackMoving: 0
+  muzzleFlashPrefab: {fileID: 24027435355777881, guid: 66e64bc9213ab204b83bbd2c8531f792,
+    type: 3}
+  muzzleFlashLocation: {fileID: 6301666143479372439}
 --- !u!1 &7280566800011901268
 GameObject:
   m_ObjectHideFlags: 0
@@ -1027,7 +1032,7 @@ RectTransform:
   m_GameObject: {fileID: 7280566800011901268}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_Children: []
   m_Father: {fileID: 3658256614355228816}
   m_RootOrder: 0
@@ -1103,6 +1108,36 @@ Transform:
   - {fileID: 3288621668502618606}
   m_Father: {fileID: 407638577357039393}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8683062674594912560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6301666143479372439}
+  m_Layer: 9
+  m_Name: Muzzle Flash Location
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6301666143479372439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8683062674594912560}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: -2.4571428, y: 2.3571424, z: -34.185715}
+  m_LocalScale: {x: 14.285715, y: 14.285715, z: 14.285715}
+  m_Children: []
+  m_Father: {fileID: 9123687718906456316}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8912387490643404001
 GameObject:

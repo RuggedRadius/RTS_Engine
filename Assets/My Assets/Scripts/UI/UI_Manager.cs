@@ -167,7 +167,7 @@ public class UI_Manager : MonoBehaviour
         }
     }
 
-    private void GetUpdatedSelection()
+    public void GetUpdatedSelection()
     {
         currentSelection.Clear();
 
